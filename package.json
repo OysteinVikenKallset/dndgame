@@ -1,0 +1,42 @@
+{
+  "name": "dndgame",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint \"src/**/*.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "docs:guard": "node scripts/docs-guard.mjs staged",
+    "docs:guard:ci": "node scripts/docs-guard.mjs ci",
+    "check": "npm run lint && npm test && npm run build",
+    "prepare": "husky",
+    "start": "node dist/server.js",
+    "serve": "npm run build && npm run start",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "@vitest/coverage-v8": "^4.0.18",
+    "eslint": "^10.0.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "eslint --fix",
+      "vitest related --run"
+    ]
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
