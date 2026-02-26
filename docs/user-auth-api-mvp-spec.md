@@ -25,6 +25,9 @@ Strategi i MVP: cookie-basert session (secure-by-default).
 }
 ```
 
+- Kompatibilitetsnote: Dette er bevisst legacy error-shape for MVP-auth.
+- Ved fremtidig overgang til standard error object (`error.code`/`error.message`) skal endringen håndteres via versjonert migreringsplan i tråd med `docs/skills/api-contracts-and-versioning.skill.md`.
+
 - Ingen respons skal eksponere `passwordHash` eller andre hemmeligheter.
 - E-post normaliseres med `trim + lowercase` før lagring og login-søk.
 - Unikhet for e-post håndheves i DB med unique index; konflikt returnerer `409`.

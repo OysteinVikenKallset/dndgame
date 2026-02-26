@@ -27,6 +27,10 @@ Denne mappen beskriver ferdigheter (skills) som AI-agenter og utviklere skal fø
 - `object-oriented-programming.skill.md`
 - `design-patterns.skill.md`
 - `user-auth-api.skill.md`
+- `api-contracts-and-versioning.skill.md`
+- `authorization-and-access-control.skill.md`
+- `data-modeling-persistence.skill.md`
+- `database-and-migrations.skill.md`
 - `project-documentation-system.skill.md`
 - `ai-agent-doc-compliance.skill.md`
 - `skill-template.skill.md`

@@ -5,6 +5,7 @@ Denne sjekklisten brukes av AI-agenter før de leverer en endring.
 ## Obligatoriske spørsmål per PR
 
 - Hva endret jeg?
+- Hvilken rad i `docs/reference/skill-routing-matrix.md` dekker denne oppgaven?
 - Hvilket lag berører dette (`domain`/`application`/`infrastructure`/`interface`)?
 - Er ny atferd skrevet test-først?
 - Brøt jeg dependency rule?
@@ -28,6 +29,7 @@ Agenten skal inkludere dette formatet i leveransen:
 ```text
 Compliance Summary:
 - Relevant skills:
+- Skill-routing rad(er):
 - MUST-regler påvirket:
 - Antagelser:
 - Risiko:

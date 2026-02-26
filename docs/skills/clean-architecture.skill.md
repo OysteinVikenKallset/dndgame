@@ -4,7 +4,18 @@
 
 - Owner: Engineering Team
 - Stability: Stable
-- Last reviewed: 2026-02-24
+- Last reviewed: 2026-02-26
+
+## Related skills
+
+- `data-modeling-persistence.skill.md` (modellvalg, persistence-grenser og mapping)
+- `database-and-migrations.skill.md` (operativ migrasjonsdrift, deployrekkefølge, backup/restore)
+
+## Terminologi (standard)
+
+- `schema` og `skjema` brukes synonymt; i ny tekst foretrekkes `skjema`.
+- `forward-only` brukes som standard term for migrasjonsretning i docs som omhandler databasedrift.
+- `rollback` brukes kun om eksplisitt rollback-strategi; ellers foretrekkes korrigerende migrasjon.
 
 ## Mål
 
@@ -118,6 +129,13 @@ Application:
 
 Hvis en regel gjelder uansett use-case, hører den hjemme i `domain`, ikke i `application`.
 
+## Aggregate boundary-regel
+
+- Aggregate root er konsistensgrense i domenet.
+- Én repository per aggregate root er default.
+- Kryss-aggregate referanser skal skje via ID, ikke via direkte objektgraf.
+- Kryss-aggregate regler orkestreres i `application`, ikke ved å bryte domenegrenser.
+
 ## Invariants-regel
 
 - Domenemodeller skal beskytte sine egne invariants.
@@ -148,6 +166,11 @@ Hvis du må importere et ytre lag inn i et indre lag, skal du:
 - Forklare hvorfor designet bryter dependency rule
 - Trekke ut port/kontrakt i riktig lag
 - Implementere adapter i ytterlaget
+
+Stopp også hvis:
+
+- aggregate boundary er uklar og krever krysslag-kobling for å fungere
+- transaksjonsgrense blir implisitt eller skaper risiko for partial commit
 
 ## Kompleksitetsindikatorer
 
@@ -203,6 +226,14 @@ Hvis det er uklart hvor kode hører hjemme, er designet for komplekst.
 - Én use-case = én konsistent forretningsoperasjon.
 - Transaksjonsgrenser defineres i `application`-laget.
 - `domain` skal ikke håndtere transaksjonsstyring.
+- Kryss-aggregate operasjoner skal ha eksplisitt konsistensstrategi.
+- Partial commits er forbudt.
+
+## Query vs Command (CQRS-light)
+
+- Skrivemodell i `domain`/`application` optimaliseres for invariants og korrekthet.
+- Lesemodell kan optimaliseres separat i `infrastructure` for spørringsbehov.
+- CQRS-light skal ikke brukes som unnskyldning for lagbrudd eller dupliserte forretningsregler.
 
 ## Feilhåndtering skal være konsistent
 
@@ -264,6 +295,7 @@ Hvis nei, vent med abstraksjonen.
 - Ikke lag repository-interface før du faktisk trenger variasjon.
 - Ikke lag ett generisk repository for alle entiteter som default.
 - Design repository per use-case-behov, ikke per CRUD-mal.
+- Hold repository-kontrakter aggregate-orienterte, ikke ORM-orienterte.
 
 ## Teststrategi per lag
 
@@ -401,3 +433,6 @@ Clean Architecture er:
 
 - 2026-02-24: Opprettet
 - 2026-02-24: Utvidet med pragmatisk lagmodell, ansvarsfordeling, teststrategi og AI-guardrails mot overengineering
+- 2026-02-26: Justert med aggregate boundary-regel, tydeligere transaksjonspolicy og CQRS-light-presisering
+- 2026-02-26: Lagt til Related skills for symmetrisk kryssnavigasjon
+- 2026-02-26: Lagt til Terminologi (standard) for konsistent språk på tvers av skills

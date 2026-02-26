@@ -11,6 +11,7 @@
 ## Compliance Summary
 
 - Relevant skills:
+- Skill-routing rad(er):
 - MUST-regler påvirket:
 - Antagelser:
 - Risiko:

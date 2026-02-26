@@ -15,19 +15,24 @@ Any implementation must follow relevant skills.
 ## Start here
 
 1. Les `docs/00-quickstart.md`
-2. Finn oppgave i beslutningstreet under
-3. Les `docs/skills/ai-agent-doc-compliance.skill.md` (gjelder alltid for AI)
-4. Les relevante skills før implementasjon
-5. Bruk PR-malens `Compliance Summary` i `.github/pull_request_template.md`
+2. Finn oppgavetype i `docs/reference/skill-routing-matrix.md`
+3. Kryssjekk med beslutningstreet under
+4. Les `docs/skills/ai-agent-doc-compliance.skill.md` (gjelder alltid for AI)
+5. Les relevante skills før implementasjon
+6. Bruk PR-malens `Compliance Summary` i `.github/pull_request_template.md`
 
 ## Beslutningstre
 
 - Hvis du skal endre auth eller brukerflyt:
   - Les `docs/skills/user-auth-api.skill.md`
+  - Les `docs/skills/authorization-and-access-control.skill.md`
   - Les `docs/user-auth-api-mvp-spec.md`
   - Les `docs/skills/project-documentation-system.skill.md`
 - Hvis du skal legge til/endre endpoint:
+  - Les `docs/reference/skill-routing-matrix.md`
   - Les `docs/user-auth-api-mvp-spec.md`
+  - Les `docs/skills/api-contracts-and-versioning.skill.md`
+  - Les `docs/skills/authorization-and-access-control.skill.md` ved authz/ownership/sensitiv ressurs
   - Les `docs/testing-strategy.md`
   - Les `docs/skills/test-drevet-utvikling.skill.md`
 - Hvis du skal refaktorere kode:
@@ -37,6 +42,12 @@ Any implementation must follow relevant skills.
   - Les `docs/reference/object-oriented-programming.md`
   - Les `docs/skills/design-patterns.skill.md`
   - Les `docs/reference/design-patterns.md`
+- Hvis du skal modellere data eller endre persistens:
+  - Les `docs/reference/skill-routing-matrix.md`
+  - Les `docs/skills/data-modeling-persistence.skill.md`
+  - Les `docs/skills/database-and-migrations.skill.md`
+  - Les `docs/skills/clean-architecture.skill.md`
+  - Les `docs/testing-strategy.md`
 - Hvis du skal endre arbeidsprosess/regler:
   - Les `docs/engineering-os-v1.md`
   - Les `docs/team-conventions.md`
@@ -65,6 +76,8 @@ Kjernedokumenter for operativ styring av mennesker + AI:
 - `adr/`: Architecture Decision Records (viktige beslutninger)
 - `decisions/`: Beslutningsindeks og peker til ADR
 - `reference/`: Glossary, project map og kontraktreferanser
+- `reference/skill-routing-matrix.md`: Oppgavetype -> obligatoriske skills (MUST/SHOULD)
+- `reference/access-control.md`: Policy-matrise (roller x actions) for authz
 - `guides/`: Task-first steg-for-steg guider
 - `runbooks/`: Feilsøking og operasjonelle playbooks
 - `agents/`: Agentkontrakt og agentchecklist
@@ -73,6 +86,10 @@ Kjernedokumenter for operativ styring av mennesker + AI:
 - `skills/object-oriented-programming.skill.md`: Operativ veiledning for pragmatisk bruk av OOP
 - `skills/design-patterns.skill.md`: Operativ veiledning for når/hvordan design patterns brukes
 - `skills/user-auth-api.skill.md`: Operativ standard for sikkert bruker- og autentiserings-API
+- `skills/api-contracts-and-versioning.skill.md`: Operativ standard for DTO-er, feilformat, versjonering og contract tests
+- `skills/authorization-and-access-control.skill.md`: Operativ standard for roller, ownership, policy-regler og audit trail
+- `skills/data-modeling-persistence.skill.md`: Operativ standard for datamodellering, constraints, migrasjoner og mapping
+- `skills/database-and-migrations.skill.md`: Operativ standard for migrasjoner, seed-policy, test-DB-strategi og backup/restore light
 - `skills/project-documentation-system.skill.md`: Operativ docs-standard og håndhevingsregler
 - `user-auth-api-mvp-spec.md`: Konkret endpoint-kontrakt for første versjon av bruker/auth-API
 - `engineering-os-v1.md`: Operativ kortversjon med beslutningstre og sjekklister
