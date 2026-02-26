@@ -8,6 +8,7 @@ import { handleLoginRequest } from "./interface/http/login-controller";
 import { handleLogoutRequest } from "./interface/http/logout-controller";
 import { handleRegisterRequest } from "./interface/http/register-controller";
 import { handleUpdateMyProfileRequest } from "./interface/http/update-my-profile-controller";
+import { createApiErrorResponse } from "./interface/http/api-response";
 
 const app = express();
 app.use(express.json());
@@ -40,9 +41,11 @@ async function loginRouteHandler(request: Request, response: Response) {
   const canProceed = loginRateLimiter.allow(buildRateLimitKey(request, email));
 
   if (!canProceed) {
-    response.status(429).json({
-      error: "Too many requests",
-    });
+    response
+      .status(429)
+      .json(
+        createApiErrorResponse(429, "RATE_LIMITED", "Too many requests").body,
+      );
     return;
   }
 
@@ -68,7 +71,6 @@ async function loginRouteHandler(request: Request, response: Response) {
 }
 
 app.post("/api/auth/login", loginRouteHandler);
-app.post("/login", loginRouteHandler);
 
 app.get("/api/auth/me", async (request: Request, response: Response) => {
   const cookie = request.header("cookie");
@@ -114,9 +116,11 @@ app.post("/api/auth/register", async (request: Request, response: Response) => {
   );
 
   if (!canProceed) {
-    response.status(429).json({
-      error: "Too many requests",
-    });
+    response
+      .status(429)
+      .json(
+        createApiErrorResponse(429, "RATE_LIMITED", "Too many requests").body,
+      );
     return;
   }
 

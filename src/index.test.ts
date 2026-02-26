@@ -14,10 +14,12 @@ describe("loginViaHttp", () => {
     expect(response).toEqual({
       status: 200,
       body: {
-        user: {
-          id: "user-1",
-          email: "alice@example.com",
-          displayName: "",
+        data: {
+          user: {
+            id: "user-1",
+            email: "alice@example.com",
+            displayName: "",
+          },
         },
       },
       setCookie: "sessionId=session-user-1; Path=/; HttpOnly; SameSite=Lax",

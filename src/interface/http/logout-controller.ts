@@ -3,6 +3,7 @@ import {
   UNAUTHORIZED_ERROR,
 } from "../../application/use-cases/logout-user";
 import type { SessionService } from "../../application/ports/auth";
+import { createApiErrorResponse, type ApiErrorResponse } from "./api-response";
 import { buildClearSessionCookie, extractSessionId } from "./session-cookie";
 
 type LogoutRequest = {
@@ -16,12 +17,7 @@ type LogoutResponse =
       status: 204;
       clearCookie: string;
     }
-  | {
-      status: 401 | 500;
-      body: {
-        error: string;
-      };
-    };
+  | ApiErrorResponse;
 
 type LogoutControllerDependencies = {
   sessionService: SessionService;
@@ -45,19 +41,13 @@ export async function handleLogoutRequest(
     };
   } catch (error) {
     if (error instanceof Error && error.message === UNAUTHORIZED_ERROR) {
-      return {
-        status: 401,
-        body: {
-          error: UNAUTHORIZED_ERROR,
-        },
-      };
+      return createApiErrorResponse(401, "UNAUTHORIZED", UNAUTHORIZED_ERROR);
     }
 
-    return {
-      status: 500,
-      body: {
-        error: "Internal server error",
-      },
-    };
+    return createApiErrorResponse(
+      500,
+      "INTERNAL_SERVER_ERROR",
+      "Internal server error",
+    );
   }
 }

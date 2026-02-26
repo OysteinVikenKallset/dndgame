@@ -33,10 +33,12 @@ describe("handleLoginRequest", () => {
     expect(response).toEqual({
       status: 200,
       body: {
-        user: {
-          id: "user-1",
-          email: "alice@example.com",
-          displayName: "",
+        data: {
+          user: {
+            id: "user-1",
+            email: "alice@example.com",
+            displayName: "",
+          },
         },
       },
       setCookie: "sessionId=session-user-1; Path=/; HttpOnly; SameSite=Lax",
@@ -74,7 +76,10 @@ describe("handleLoginRequest", () => {
     expect(response).toEqual({
       status: 401,
       body: {
-        error: "Invalid credentials",
+        error: {
+          code: "INVALID_CREDENTIALS",
+          message: "Invalid credentials",
+        },
       },
     });
   });
@@ -108,7 +113,10 @@ describe("handleLoginRequest", () => {
     expect(response).toEqual({
       status: 500,
       body: {
-        error: "Internal server error",
+        error: {
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Internal server error",
+        },
       },
     });
   });
@@ -140,7 +148,10 @@ describe("handleLoginRequest", () => {
     expect(response).toEqual({
       status: 400,
       body: {
-        error: "Invalid login input",
+        error: {
+          code: "INVALID_LOGIN_INPUT",
+          message: "Invalid login input",
+        },
       },
     });
   });

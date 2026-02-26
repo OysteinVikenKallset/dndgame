@@ -30,7 +30,7 @@ describe("handleRegisterRequest", () => {
     expect(response).toEqual({
       status: 201,
       body: {
-        user: {
+        data: {
           id: "user-2",
           email: "alice@example.com",
           displayName: "Alice",
@@ -71,7 +71,10 @@ describe("handleRegisterRequest", () => {
     expect(response).toEqual({
       status: 409,
       body: {
-        error: "Email already in use",
+        error: {
+          code: "EMAIL_ALREADY_IN_USE",
+          message: "Email already in use",
+        },
       },
     });
   });
@@ -102,7 +105,10 @@ describe("handleRegisterRequest", () => {
     expect(response).toEqual({
       status: 500,
       body: {
-        error: "Internal server error",
+        error: {
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Internal server error",
+        },
       },
     });
   });
@@ -135,7 +141,10 @@ describe("handleRegisterRequest", () => {
     expect(response).toEqual({
       status: 400,
       body: {
-        error: "Invalid register input",
+        error: {
+          code: "INVALID_REGISTER_INPUT",
+          message: "Invalid register input",
+        },
       },
     });
   });

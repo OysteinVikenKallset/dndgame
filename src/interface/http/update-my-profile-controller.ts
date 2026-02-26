@@ -7,6 +7,12 @@ import {
   UNAUTHORIZED_ERROR,
   updateMyProfile,
 } from "../../application/use-cases/update-my-profile";
+import {
+  createApiErrorResponse,
+  createApiSuccessResponse,
+  type ApiErrorResponse,
+  type ApiSuccessResponse,
+} from "./api-response";
 import { extractSessionId } from "./session-cookie";
 
 type UpdateMyProfileRequest = {
@@ -17,18 +23,15 @@ type UpdateMyProfileRequest = {
 };
 
 type UpdateMyProfileResponse = {
-  status: number;
-  body:
-    | {
-        id: string;
-        email: string;
-        displayName: string;
-        avatarUrl?: string;
-      }
-    | {
-        error: string;
-      };
+  id: string;
+  email: string;
+  displayName: string;
+  avatarUrl?: string;
 };
+
+type UpdateMyProfileControllerResponse =
+  | ApiSuccessResponse<UpdateMyProfileResponse>
+  | ApiErrorResponse;
 
 type UpdateMyProfileControllerDependencies = {
   userRepository: UserProfileRepository;
@@ -44,14 +47,13 @@ function hasOnlyAllowedFields(body: Record<string, unknown>): boolean {
 export async function handleUpdateMyProfileRequest(
   request: UpdateMyProfileRequest,
   dependencies: UpdateMyProfileControllerDependencies,
-): Promise<UpdateMyProfileResponse> {
+): Promise<UpdateMyProfileControllerResponse> {
   if (!hasOnlyAllowedFields(request.body)) {
-    return {
-      status: 400,
-      body: {
-        error: INVALID_UPDATE_PROFILE_INPUT_ERROR,
-      },
-    };
+    return createApiErrorResponse(
+      400,
+      "INVALID_UPDATE_PROFILE_INPUT",
+      INVALID_UPDATE_PROFILE_INPUT_ERROR,
+    );
   }
 
   if (
@@ -62,12 +64,11 @@ export async function handleUpdateMyProfileRequest(
       request.body["avatarUrl"] !== undefined &&
       typeof request.body["avatarUrl"] !== "string")
   ) {
-    return {
-      status: 400,
-      body: {
-        error: INVALID_UPDATE_PROFILE_INPUT_ERROR,
-      },
-    };
+    return createApiErrorResponse(
+      400,
+      "INVALID_UPDATE_PROFILE_INPUT",
+      INVALID_UPDATE_PROFILE_INPUT_ERROR,
+    );
   }
 
   try {
@@ -84,37 +85,27 @@ export async function handleUpdateMyProfileRequest(
       dependencies,
     );
 
-    return {
-      status: 200,
-      body: updated,
-    };
+    return createApiSuccessResponse(200, updated);
   } catch (error) {
     if (error instanceof Error && error.message === UNAUTHORIZED_ERROR) {
-      return {
-        status: 401,
-        body: {
-          error: UNAUTHORIZED_ERROR,
-        },
-      };
+      return createApiErrorResponse(401, "UNAUTHORIZED", UNAUTHORIZED_ERROR);
     }
 
     if (
       error instanceof Error &&
       error.message === INVALID_UPDATE_PROFILE_INPUT_ERROR
     ) {
-      return {
-        status: 400,
-        body: {
-          error: INVALID_UPDATE_PROFILE_INPUT_ERROR,
-        },
-      };
+      return createApiErrorResponse(
+        400,
+        "INVALID_UPDATE_PROFILE_INPUT",
+        INVALID_UPDATE_PROFILE_INPUT_ERROR,
+      );
     }
 
-    return {
-      status: 500,
-      body: {
-        error: "Internal server error",
-      },
-    };
+    return createApiErrorResponse(
+      500,
+      "INTERNAL_SERVER_ERROR",
+      "Internal server error",
+    );
   }
 }

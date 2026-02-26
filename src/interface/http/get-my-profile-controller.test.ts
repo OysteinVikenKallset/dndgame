@@ -31,9 +31,11 @@ describe("handleGetMyProfileRequest", () => {
     expect(response).toEqual({
       status: 200,
       body: {
-        id: "user-1",
-        email: "alice@example.com",
-        displayName: "Alice",
+        data: {
+          id: "user-1",
+          email: "alice@example.com",
+          displayName: "Alice",
+        },
       },
     });
   });
@@ -59,7 +61,10 @@ describe("handleGetMyProfileRequest", () => {
     expect(response).toEqual({
       status: 401,
       body: {
-        error: "Unauthorized",
+        error: {
+          code: "UNAUTHORIZED",
+          message: "Unauthorized",
+        },
       },
     });
   });
@@ -87,7 +92,10 @@ describe("handleGetMyProfileRequest", () => {
     expect(response).toEqual({
       status: 401,
       body: {
-        error: "Unauthorized",
+        error: {
+          code: "UNAUTHORIZED",
+          message: "Unauthorized",
+        },
       },
     });
   });
@@ -117,7 +125,10 @@ describe("handleGetMyProfileRequest", () => {
     expect(response).toEqual({
       status: 500,
       body: {
-        error: "Internal server error",
+        error: {
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Internal server error",
+        },
       },
     });
   });

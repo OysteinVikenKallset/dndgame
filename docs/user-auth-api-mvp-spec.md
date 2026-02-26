@@ -21,12 +21,20 @@ Strategi i MVP: cookie-basert session (secure-by-default).
 
 ```json
 {
-  "error": "Kort, stabil feilkode/tekst"
+  "error": {
+    "code": "STABLE_MACHINE_CODE",
+    "message": "Kort, klientvennlig melding"
+  }
 }
 ```
 
-- Kompatibilitetsnote: Dette er bevisst legacy error-shape for MVP-auth.
-- Ved fremtidig overgang til standard error object (`error.code`/`error.message`) skal endringen håndteres via versjonert migreringsplan i tråd med `docs/skills/api-contracts-and-versioning.skill.md`.
+- Alle suksessresponser med body følger format:
+
+```json
+{
+  "data": {}
+}
+```
 
 - Ingen respons skal eksponere `passwordHash` eller andre hemmeligheter.
 - E-post normaliseres med `trim + lowercase` før lagring og login-søk.
@@ -68,9 +76,11 @@ Unsafe metoder (`POST`, `PATCH`, `DELETE`) beskyttes med:
 
 ```json
 {
-  "id": "user-1",
-  "email": "alice@example.com",
-  "displayName": "Alice"
+  "data": {
+    "id": "user-1",
+    "email": "alice@example.com",
+    "displayName": "Alice"
+  }
 }
 ```
 
@@ -99,10 +109,12 @@ Unsafe metoder (`POST`, `PATCH`, `DELETE`) beskyttes med:
 
 ```json
 {
-  "user": {
-    "id": "user-1",
-    "email": "alice@example.com",
-    "displayName": "Alice"
+  "data": {
+    "user": {
+      "id": "user-1",
+      "email": "alice@example.com",
+      "displayName": "Alice"
+    }
   }
 }
 ```
@@ -151,9 +163,11 @@ Gyldig session-cookie.
 
 ```json
 {
-  "id": "user-1",
-  "email": "alice@example.com",
-  "displayName": "Alice"
+  "data": {
+    "id": "user-1",
+    "email": "alice@example.com",
+    "displayName": "Alice"
+  }
 }
 ```
 
@@ -182,9 +196,11 @@ Ukjente felter avvises (`400`) for å hindre mass assignment.
 
 ```json
 {
-  "id": "user-1",
-  "email": "alice@example.com",
-  "displayName": "Alice Liddell"
+  "data": {
+    "id": "user-1",
+    "email": "alice@example.com",
+    "displayName": "Alice Liddell"
+  }
 }
 ```
 
@@ -231,7 +247,7 @@ Nåværende implementasjon i kode:
 - Vindu: `10` minutter
 - Grense: `5` requests per nøkkel per endpoint
 - Nøkkel: `${request.ip}:${email.trim().toLowerCase()}`
-- Feilrespons: `429` med `{ "error": "Too many requests" }`
+- Feilrespons: `429` med `{ "error": { "code": "RATE_LIMITED", "message": "Too many requests" } }`
 
 ## Testkrav per endpoint (minimum)
 

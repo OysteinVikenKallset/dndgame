@@ -34,9 +34,11 @@ describe("handleUpdateMyProfileRequest", () => {
     expect(response).toEqual({
       status: 200,
       body: {
-        id: "user-1",
-        email: "alice@example.com",
-        displayName: "Alice Liddell",
+        data: {
+          id: "user-1",
+          email: "alice@example.com",
+          displayName: "Alice Liddell",
+        },
       },
     });
   });
@@ -74,10 +76,12 @@ describe("handleUpdateMyProfileRequest", () => {
     expect(response).toEqual({
       status: 200,
       body: {
-        id: "user-1",
-        email: "alice@example.com",
-        displayName: "Alice",
-        avatarUrl: "https://example.com/avatar.png",
+        data: {
+          id: "user-1",
+          email: "alice@example.com",
+          displayName: "Alice",
+          avatarUrl: "https://example.com/avatar.png",
+        },
       },
     });
   });
@@ -109,7 +113,10 @@ describe("handleUpdateMyProfileRequest", () => {
     expect(response).toEqual({
       status: 400,
       body: {
-        error: "Invalid update profile input",
+        error: {
+          code: "INVALID_UPDATE_PROFILE_INPUT",
+          message: "Invalid update profile input",
+        },
       },
     });
   });
@@ -139,7 +146,10 @@ describe("handleUpdateMyProfileRequest", () => {
     expect(response).toEqual({
       status: 401,
       body: {
-        error: "Unauthorized",
+        error: {
+          code: "UNAUTHORIZED",
+          message: "Unauthorized",
+        },
       },
     });
   });
@@ -171,7 +181,10 @@ describe("handleUpdateMyProfileRequest", () => {
     expect(response).toEqual({
       status: 400,
       body: {
-        error: "Invalid update profile input",
+        error: {
+          code: "INVALID_UPDATE_PROFILE_INPUT",
+          message: "Invalid update profile input",
+        },
       },
     });
   });
@@ -201,7 +214,10 @@ describe("handleUpdateMyProfileRequest", () => {
     expect(response).toEqual({
       status: 400,
       body: {
-        error: "Invalid update profile input",
+        error: {
+          code: "INVALID_UPDATE_PROFILE_INPUT",
+          message: "Invalid update profile input",
+        },
       },
     });
   });
@@ -235,7 +251,10 @@ describe("handleUpdateMyProfileRequest", () => {
     expect(response).toEqual({
       status: 500,
       body: {
-        error: "Internal server error",
+        error: {
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Internal server error",
+        },
       },
     });
   });

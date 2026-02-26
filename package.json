@@ -11,8 +11,8 @@
     "docs:guard:ci": "node scripts/docs-guard.mjs ci",
     "check": "npm run lint && npm test && npm run build",
     "prepare": "husky",
-    "start": "node dist/server.js",
-    "serve": "npm run build && npm run start",
+    "start": "tsx src/server.ts",
+    "serve": "npm run start",
     "test": "vitest run --coverage",
     "test:watch": "vitest"
   },
@@ -28,6 +28,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "typescript": "^5.9.3",
+    "tsx": "^4.20.5",
     "vitest": "^4.0.18"
   },
   "lint-staged": {

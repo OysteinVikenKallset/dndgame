@@ -6,6 +6,12 @@ import type {
   SessionService,
   UserRepository,
 } from "../../application/ports/auth";
+import {
+  createApiErrorResponse,
+  createApiSuccessResponse,
+  type ApiErrorResponse,
+  type ApiSuccessResponse,
+} from "./api-response";
 import { extractSessionId } from "./session-cookie";
 
 type GetMyProfileRequest = {
@@ -15,17 +21,14 @@ type GetMyProfileRequest = {
 };
 
 type GetMyProfileResponse = {
-  status: number;
-  body:
-    | {
-        id: string;
-        email: string;
-        displayName: string;
-      }
-    | {
-        error: string;
-      };
+  id: string;
+  email: string;
+  displayName: string;
 };
+
+type GetMyProfileControllerResponse =
+  | ApiSuccessResponse<GetMyProfileResponse>
+  | ApiErrorResponse;
 
 type GetMyProfileControllerDependencies = {
   userRepository: UserRepository;
@@ -35,7 +38,7 @@ type GetMyProfileControllerDependencies = {
 export async function handleGetMyProfileRequest(
   request: GetMyProfileRequest,
   dependencies: GetMyProfileControllerDependencies,
-): Promise<GetMyProfileResponse> {
+): Promise<GetMyProfileControllerResponse> {
   try {
     const profile = await getMyProfile(
       {
@@ -44,21 +47,16 @@ export async function handleGetMyProfileRequest(
       dependencies,
     );
 
-    return {
-      status: 200,
-      body: profile,
-    };
+    return createApiSuccessResponse(200, profile);
   } catch (error) {
     if (error instanceof Error && error.message === UNAUTHORIZED_ERROR) {
-      return {
-        status: 401,
-        body: { error: UNAUTHORIZED_ERROR },
-      };
+      return createApiErrorResponse(401, "UNAUTHORIZED", UNAUTHORIZED_ERROR);
     }
 
-    return {
-      status: 500,
-      body: { error: "Internal server error" },
-    };
+    return createApiErrorResponse(
+      500,
+      "INTERNAL_SERVER_ERROR",
+      "Internal server error",
+    );
   }
 }
