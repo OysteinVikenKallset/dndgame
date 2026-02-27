@@ -1,6 +1,6 @@
 # Skill Routing Matrix
 
-Last reviewed: 2026-02-26
+Last reviewed: 2026-02-27
 
 ## Formål
 
@@ -15,16 +15,17 @@ Sikre at riktig skill brukes til riktig oppgavetype, med tydelige MUST-krav.
 
 ## Routing-matrise
 
-| Oppgavetype                       | Trigger / eksempel                               | MUST skills                                                                                                   | SHOULD skills                                                                 |
-| --------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Endre auth/autentisering          | login/logout/register/session                    | `ai-agent-doc-compliance.skill.md`, `user-auth-api.skill.md`, `authorization-and-access-control.skill.md`     | `api-contracts-and-versioning.skill.md`, `test-drevet-utvikling.skill.md`     |
-| Legge til/endre HTTP-endpoint     | ny route, ny request/response, statuskodeendring | `ai-agent-doc-compliance.skill.md`, `api-contracts-and-versioning.skill.md`, `test-drevet-utvikling.skill.md` | `authorization-and-access-control.skill.md`, `clean-architecture.skill.md`    |
-| Endre tilgangsregler              | roller, ownership, policy, audit                 | `ai-agent-doc-compliance.skill.md`, `authorization-and-access-control.skill.md`                               | `api-contracts-and-versioning.skill.md`, `data-modeling-persistence.skill.md` |
-| Modellere data / endre persistens | entiteter, constraints, repository-kontrakter    | `ai-agent-doc-compliance.skill.md`, `data-modeling-persistence.skill.md`, `database-and-migrations.skill.md`  | `clean-architecture.skill.md`, `test-drevet-utvikling.skill.md`               |
-| Endre schema/migrasjoner          | nye tabeller/felt, rollback/forward-only         | `ai-agent-doc-compliance.skill.md`, `database-and-migrations.skill.md`                                        | `data-modeling-persistence.skill.md`, `test-drevet-utvikling.skill.md`        |
-| Refaktorering uten ny atferd      | struktur/navn/ansvarsdeling                      | `ai-agent-doc-compliance.skill.md`, `clean-code.skill.md`, `clean-architecture.skill.md`                      | `object-oriented-programming.skill.md`, `design-patterns.skill.md`            |
-| Ny business-regel i domain        | invariants, valideringsregler som alltid gjelder | `ai-agent-doc-compliance.skill.md`, `clean-architecture.skill.md`, `test-drevet-utvikling.skill.md`           | `clean-code.skill.md`, `object-oriented-programming.skill.md`                 |
-| Endre docs/governance             | nye skills, policyendring, arbeidsprosess        | `ai-agent-doc-compliance.skill.md`, `project-documentation-system.skill.md`                                   | `clean-architecture.skill.md`                                                 |
+| Oppgavetype                       | Trigger / eksempel                               | MUST skills                                                                                                             | SHOULD skills                                                                        |
+| --------------------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Endre auth/autentisering          | login/logout/register/session                    | `ai-agent-doc-compliance.skill.md`, `user-auth-api.skill.md`, `authorization-and-access-control.skill.md`               | `api-contracts-and-versioning.skill.md`, `test-drevet-utvikling.skill.md`            |
+| Legge til/endre HTTP-endpoint     | ny route, ny request/response, statuskodeendring | `ai-agent-doc-compliance.skill.md`, `api-contracts-and-versioning.skill.md`, `test-drevet-utvikling.skill.md`           | `authorization-and-access-control.skill.md`, `clean-architecture.skill.md`           |
+| Endre tilgangsregler              | roller, ownership, policy, audit                 | `ai-agent-doc-compliance.skill.md`, `authorization-and-access-control.skill.md`                                         | `api-contracts-and-versioning.skill.md`, `data-modeling-persistence.skill.md`        |
+| Modellere data / endre persistens | entiteter, constraints, repository-kontrakter    | `ai-agent-doc-compliance.skill.md`, `data-modeling-persistence.skill.md`, `database-and-migrations.skill.md`            | `clean-architecture.skill.md`, `test-drevet-utvikling.skill.md`                      |
+| Endre schema/migrasjoner          | nye tabeller/felt, rollback/forward-only         | `ai-agent-doc-compliance.skill.md`, `database-and-migrations.skill.md`                                                  | `data-modeling-persistence.skill.md`, `test-drevet-utvikling.skill.md`               |
+| Bygge/endre frontend (React/Next) | nye sider, komponenter, state/datahenting, forms | `ai-agent-doc-compliance.skill.md`, `frontend-architecture-and-code-quality-react-next.skill.md`, `clean-code.skill.md` | `api-contracts-and-versioning.skill.md`, `authorization-and-access-control.skill.md` |
+| Refaktorering uten ny atferd      | struktur/navn/ansvarsdeling                      | `ai-agent-doc-compliance.skill.md`, `clean-code.skill.md`, `clean-architecture.skill.md`                                | `object-oriented-programming.skill.md`, `design-patterns.skill.md`                   |
+| Ny business-regel i domain        | invariants, valideringsregler som alltid gjelder | `ai-agent-doc-compliance.skill.md`, `clean-architecture.skill.md`, `test-drevet-utvikling.skill.md`                     | `clean-code.skill.md`, `object-oriented-programming.skill.md`                        |
+| Endre docs/governance             | nye skills, policyendring, arbeidsprosess        | `ai-agent-doc-compliance.skill.md`, `project-documentation-system.skill.md`                                             | `clean-architecture.skill.md`                                                        |
 
 ## Prioritetsregler ved konflikt
 

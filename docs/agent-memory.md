@@ -10,7 +10,6 @@ Dette dokumentet er en kort, levende status for AI-agenter.
 - `PATCH /api/users/me` er implementert med allowlist (`displayName`, `avatarUrl`) og negative tester
 - Rate limiting er implementert på `POST /api/auth/register` og `POST /api/auth/login` (`429`, 5 forsøk per 10 min, nøkkel `ip+email`)
 - Session-basert auth er aktiv med server-side session store og cookie `sessionId`
-- Login støtter både `/api/auth/login` og kompatibilitetsalias `/login`
 - Kvalitetsguardrails er operative (lint, test, build, PR-sjekkliste)
 - AI runtime-governance er operativ med global compliance-skill, hard stop/escalation, verification hierarchy og fast `Compliance Summary`
 - Coverage policy håndheves på 100% og er grønn
