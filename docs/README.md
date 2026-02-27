@@ -45,6 +45,7 @@ Any implementation must follow relevant skills.
 - Hvis du skal bygge/endre frontend med React/Next:
   - Les `docs/reference/skill-routing-matrix.md`
   - Les `docs/skills/frontend-architecture-and-code-quality-react-next.skill.md`
+  - Les `docs/skills/frontend-container-composition-and-props.skill.md`
   - Les `docs/skills/clean-code.skill.md`
   - Les `docs/skills/api-contracts-and-versioning.skill.md`
   - Les `docs/skills/authorization-and-access-control.skill.md` ved authz-styrte UI-handlinger
@@ -96,6 +97,7 @@ Kjernedokumenter for operativ styring av mennesker + AI:
 - `skills/authorization-and-access-control.skill.md`: Operativ standard for roller, ownership, policy-regler og audit trail
 - `skills/data-modeling-persistence.skill.md`: Operativ standard for datamodellering, constraints, migrasjoner og mapping
 - `skills/database-and-migrations.skill.md`: Operativ standard for migrasjoner, seed-policy, test-DB-strategi og backup/restore light
+- `skills/frontend-container-composition-and-props.skill.md`: Operativ standard for container-komposisjon, props-disciplin, viewModel/actions-kontrakt og controller-hooks
 - `skills/frontend-architecture-and-code-quality-react-next.skill.md`: Operativ standard for frontend-arkitektur, komponentansvar, state/datahenting og testbar React/Next-kode
 - `skills/project-documentation-system.skill.md`: Operativ docs-standard og håndhevingsregler
 - `user-auth-api-mvp-spec.md`: Konkret endpoint-kontrakt for første versjon av bruker/auth-API

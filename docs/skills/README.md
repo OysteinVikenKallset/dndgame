@@ -31,6 +31,7 @@ Denne mappen beskriver ferdigheter (skills) som AI-agenter og utviklere skal fø
 - `authorization-and-access-control.skill.md`
 - `data-modeling-persistence.skill.md`
 - `database-and-migrations.skill.md`
+- `frontend-container-composition-and-props.skill.md`
 - `frontend-architecture-and-code-quality-react-next.skill.md`
 - `project-documentation-system.skill.md`
 - `ai-agent-doc-compliance.skill.md`

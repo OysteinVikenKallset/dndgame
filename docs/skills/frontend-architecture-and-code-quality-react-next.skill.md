@@ -10,6 +10,7 @@
 
 - `clean-code.skill.md` (globale kvalitetsregler; dupliseres ikke her)
 - `clean-architecture.skill.md` (ansvarsdeling og avhengighetsretning)
+- `frontend-container-composition-and-props.skill.md` (props-disciplin, container-lesbarhet, konsolidering av selectors/derived state)
 - `api-contracts-and-versioning.skill.md` (kontrakttro datahenting og feilhåndtering)
 - `authorization-and-access-control.skill.md` (UI-gating vs server-autorisering)
 - `test-drevet-utvikling.skill.md` (test-først for ny atferd)
@@ -79,6 +80,8 @@ Denne skillen supplerer `clean-code.skill.md` med kun frontend-spesifikke regler
    - Fritekst-feilmeldinger brukes kun som visning, ikke som styringslogikk.
 
 ## Komponentarkitektur
+
+For detaljerte regler om props-budget, `viewModel/actions`-kontrakter, inline-dispatch-forbud, controller-hooks og feature-scoped context, følg i tillegg `frontend-container-composition-and-props.skill.md`.
 
 MUST:
 
