@@ -21,8 +21,8 @@
     "skipLibCheck": false,
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "Backend/src"
   },
-  "include": ["src/**/*.ts"],
+  "include": ["Backend/src/**/*.ts"],
   "exclude": ["dist", "node_modules"]
 }

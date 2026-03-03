@@ -196,7 +196,7 @@ Guide og reference MUST NOT blandes i samme dokument.
 
 Repoet håndhever automatisk følgende:
 
-- Hvis `src/**/*.ts` endres, må minst én fil i `docs/` endres i samme endringssett.
+- Hvis `Backend/src/**/*.ts` eller `Frontend/admin/src/**/*` endres, må minst én fil i `docs/` endres i samme endringssett.
 - Hvis ny `docs/skills/*.skill.md` legges til, må disse også oppdateres:
   - `docs/skills/README.md`
   - `docs/README.md`
@@ -237,6 +237,24 @@ Hvis en utvikler/agent oppdager at docs er utdaterte, feil eller mangler, skal v
 3. opprette eksplisitt oppgave med tydelig eierskap dersom oppdatering ikke kan gjøres umiddelbart
 
 Drift MUST NOT ignoreres.
+
+## Incident Learning Loop (obligatorisk policy)
+
+Når team/agent oppdager en ny feilmodus eller utilstrekkelig dokumentasjon under feilsøking, gjelder følgende MUST-regler:
+
+1. **Diagnosen skal dokumenteres i operativ form**
+   - Oppdater eksisterende runbook eller opprett ny runbook i `docs/runbooks/` med trigger, diagnose, mitigering og verifikasjon.
+
+2. **Styringsdokumenter skal oppdateres når guardrails manglet**
+   - Hvis eksisterende sjekklister/policies ikke fanget problemet, oppdater relevante policydocs i samme PR (f.eks. `docs/ai-work-instructions.md`, `docs/agents/checklist.md`, skill-routing).
+
+3. **Policy-oppdatering skal være i samme endringssett som fiksen**
+   - Root cause-fix uten docs-læring regnes som ufullstendig leveranse.
+
+4. **Leveransen skal inneholde eksplisitt docs-impact for læringspunktet**
+   - `Compliance Summary` MUST beskrive hvilke docs som ble styrket for å forhindre gjentakelse.
+
+Denne policyen gjør incident-håndtering kumulativ: hver feil skal forbedre systemets dokumenterte operasjonelle hukommelse.
 
 ## Regler (MUST/SHOULD/MUST NOT)
 
@@ -297,3 +315,4 @@ Docs-systemet er "ferdig" når:
 - 2026-02-24: Utvidet med authority hierarchy, scope boundary, lesbarhetsstandard, versjonsregel og drift detection
 - 2026-02-24: Utvidet med ownership rule, stability levels, kritiske docs-definisjon, latency/interpretation-regler og docs anti-patterns
 - 2026-02-25: La til automatisk docs-guard for kode->docs synk og obligatoriske indeksoppdateringer ved nye skills
+- 2026-02-28: La til obligatorisk Incident Learning Loop-policy for kontinuerlig oppdatering av runbooks/policies ved nye feilmoduser

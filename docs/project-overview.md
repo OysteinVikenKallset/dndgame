@@ -1,6 +1,6 @@
 # Project Overview
 
-Last reviewed: 2026-02-25
+Last reviewed: 2026-02-28
 
 ## Prosjekt
 
@@ -17,13 +17,14 @@ Bygge et DnD-spill med tydelig domenelogikk, høy testbarhet og enkel videreutvi
 - Clean Architecture-basert API (`domain`/`application`/`infrastructure`/`interface`)
 - Auth-flyt: register, login, logout, me, update profile
 - Cookie-basert session med server-side invalidering
+- SQLite-basert persistens for brukere, sessions, sider og publiserte snapshots
 - In-memory rate limiting for auth-endepunkter
+- React + Vite admin-frontend for CMS MVP-flyt
 - Strenge quality gates (lint, test, build, coverage)
 
 ## Ikke i scope (enda)
 
-- UI/klient
-- Persistens/database i produksjonsvariant
+- PostgreSQL-migrering og full migrasjonspipeline for produksjon
 - Distribuert session-store
 - Komplett CSRF-strategi utover nåværende MVP-beskyttelser
 
@@ -32,4 +33,5 @@ Bygge et DnD-spill med tydelig domenelogikk, høy testbarhet og enkel videreutvi
 - Runtime: Node.js
 - Språk: TypeScript (strenge regler)
 - API: Express
+- Frontend: React + Vite
 - Testing: Vitest

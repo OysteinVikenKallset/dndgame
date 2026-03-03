@@ -51,6 +51,17 @@ Denne skillen supplerer `clean-code.skill.md` med kun frontend-spesifikke regler
 - Datahenting og visning skal separeres (må aldri brytes)
 - State-strategi skal være bevisst per feature (må aldri brytes)
 
+## Språk- og testpolicy (MUST)
+
+- Frontend-produksjonskode skal skrives i TypeScript (`.ts`/`.tsx`).
+- Frontend-tester skal finnes for ny atferd i samme endringssett.
+- Ny frontend-atferd skal følge Red -> Green -> Refactor.
+
+MUST NOT:
+
+- Introdusere ny UI-atferd uten minst én test.
+- Introdusere nye frontend-filer i ren JavaScript (`.js`/`.jsx`) uten dokumentert overgangsplan.
+
 ## Kjerneprinsipper (må aldri brytes)
 
 1. Komponenttyper skal holdes adskilt

@@ -4,7 +4,7 @@
 
 - Owner: Engineering Team
 - Stability: Evolving
-- Last reviewed: 2026-02-26
+- Last reviewed: 2026-03-02
 
 ## Related skills
 
@@ -282,6 +282,7 @@ MUST:
 
 - Hvert endpoint skal ha minst én contract test for happy path.
 - Hvert endpoint skal ha minst én contract test for relevant feilflyt.
+- Hver kontraktendring skal ha minst én test for kontraktskant (boundary/invalid input).
 - Tester skal verifisere både statuskode og responsformat.
 - Tester skal verifisere obligatoriske felter.
 - Tester skal verifisere at sensitive felter ikke returneres i respons.
@@ -290,6 +291,7 @@ SHOULD:
 
 - Teste at ukjente felter avvises der allowlist-policy gjelder.
 - Teste backward compatibility for ikke-breaking endringer.
+- Teste min/maks-grenser for pagination/limit og andre numeriske constraints.
 
 MUST NOT:
 
@@ -304,6 +306,12 @@ MUST NOT:
 4. STEP 4: Implementer minimal endpoint-løsning (GREEN)
 5. STEP 5: Bekreft contract tests + relevante lagtester
 6. STEP 6: Oppdater docs/spec og versjoneringsnotat
+
+Tilleggskrav for STEP 3 (RED):
+
+- RED-testen skal dekke enten feilflyt eller kontraktskant når endringen gjelder kontraktvalidering.
+- RED skal feile av riktig grunn (ikke testoppsett/import).
+- RED-bevis skal dokumenteres kort i PR/leveranse.
 
 Hvis et steg hoppes over, regnes det som brudd på skill-regelverket.
 
@@ -407,6 +415,7 @@ En API-kontraktendring er ferdig når:
 - kontrakt er definert/oppdatert i docs
 - contract tests er grønne
 - error cases er testet
+- kontraktskanter er testet (minst én relevant boundary/invalid-case)
 - breaking/ikke-breaking er eksplisitt vurdert
 - versioning-implikasjoner er håndtert
 - error envelope og statuskoder er konsistente

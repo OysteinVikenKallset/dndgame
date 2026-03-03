@@ -1,6 +1,6 @@
 # Guides
 
-Last reviewed: 2026-02-25
+Last reviewed: 2026-02-28
 
 Steg-for-steg oppskrifter for konkrete oppgaver.
 
@@ -14,5 +14,7 @@ Steg-for-steg oppskrifter for konkrete oppgaver.
 
 - `add-endpoint.md`
 - `docs-guard-failures.md`
+- `cms-mvp-implementation-workflow.md`
+- `frontend-feature-structure.md`
 - `write-use-case.md`
 - `testing-workflow.md`

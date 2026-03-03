@@ -5,13 +5,29 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "lint": "eslint \"src/**/*.ts\"",
-    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "build:frontend": "npm --prefix Frontend/admin run build",
+    "lint": "eslint \"Backend/src/**/*.ts\"",
+    "lint:fix": "eslint \"Backend/src/**/*.ts\" --fix",
     "docs:guard": "node scripts/docs-guard.mjs staged",
     "docs:guard:ci": "node scripts/docs-guard.mjs ci",
-    "check": "npm run lint && npm test && npm run build",
+    "check": "npm run lint && npm test && npm run build && npm run frontend:check",
+    "frontend:install": "npm --prefix Frontend/admin install",
+    "frontend:dev": "npm --prefix Frontend/admin run dev",
+    "frontend:build": "npm --prefix Frontend/admin run build",
+    "frontend:test": "npm --prefix Frontend/admin run test",
+    "frontend:typecheck": "npm --prefix Frontend/admin run typecheck",
+    "frontend:check": "npm --prefix Frontend/admin run check",
+    "website:install": "npm --prefix Frontend/website install",
+    "website:dev": "npm --prefix Frontend/website run dev",
+    "website:build": "npm --prefix Frontend/website run build",
+    "db:migrate": "tsx Backend/src/infrastructure/sqlite/cli-migrate.ts",
+    "db:seed": "tsx Backend/src/infrastructure/sqlite/cli-seed.ts",
+    "db:backup": "node scripts/sqlite-backup.mjs",
+    "db:restore": "node scripts/sqlite-restore.mjs",
     "prepare": "husky",
-    "start": "tsx src/server.ts",
+    "dev": "concurrently -k \"npm run start\" \"npm run frontend:dev\"",
+    "start": "node scripts/start-backend-safe.mjs",
+    "start:raw": "tsx Backend/src/server.ts",
     "serve": "npm run start",
     "test": "vitest run --coverage",
     "test:watch": "vitest"
@@ -20,24 +36,32 @@
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "@types/multer": "^2.0.0",
     "@types/node": "^25.3.0",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
     "@vitest/coverage-v8": "^4.0.18",
+    "concurrently": "^9.2.1",
     "eslint": "^10.0.2",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "typescript": "^5.9.3",
     "tsx": "^4.20.5",
+    "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   },
   "lint-staged": {
-    "src/**/*.ts": [
+    "Backend/src/**/*.ts": [
       "eslint --fix",
       "vitest related --run"
+    ],
+    "Frontend/admin/src/**/*.{js,jsx,ts,tsx}": [
+      "npm --prefix Frontend/admin run test -- --run"
     ]
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "@types/better-sqlite3": "^7.6.13",
+    "better-sqlite3": "^12.6.2",
+    "express": "^5.2.1",
+    "multer": "^2.1.0"
   }
 }

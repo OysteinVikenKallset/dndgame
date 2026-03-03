@@ -6,7 +6,7 @@ export default [
     ignores: ["dist/**", "node_modules/**"],
   },
   {
-    files: ["src/**/*.ts"],
+    files: ["Backend/src/**/*.ts"],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -22,7 +22,7 @@ export default [
     },
   },
   {
-    files: ["src/domain/**/*.ts"],
+    files: ["Backend/src/domain/**/*.ts"],
     rules: {
       "no-restricted-imports": [
         "error",
@@ -37,7 +37,7 @@ export default [
     },
   },
   {
-    files: ["src/application/**/*.ts"],
+    files: ["Backend/src/application/**/*.ts"],
     rules: {
       "no-restricted-imports": [
         "error",
@@ -48,7 +48,7 @@ export default [
     },
   },
   {
-    files: ["src/interface/**/*.ts"],
+    files: ["Backend/src/interface/**/*.ts"],
     rules: {
       "no-restricted-imports": [
         "error",

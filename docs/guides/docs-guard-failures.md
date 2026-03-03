@@ -24,12 +24,21 @@ Gi en rask og praktisk oppskrift når `docs-guard` blokkerer commit eller CI.
 
 ### Feil: `Code changes require docs updates in the same change set.`
 
-Dette betyr at du har endret `src/**/*.ts`, men ingen filer i `docs/` er med i samme endringssett.
+Dette betyr at du har endret `Backend/src/**/*.ts` eller `Frontend/admin/src/**/*`, men ingen filer i `docs/` er med i samme endringssett.
 
 **Fix:**
 
 - Oppdater relevante docs i `docs/` i samme commit/PR.
 - Typiske kandidater: `docs/agent-memory.md`, API-spec, skill eller guide.
+
+### Feil: `Code changes require explicit update to docs/agent-memory.md.`
+
+Dette betyr at du har endret kode, men ikke oppdatert `docs/agent-memory.md` i samme endringssett.
+
+**Fix:**
+
+- Oppdater `docs/agent-memory.md` med kort status for hva som ble endret, hvorfor, og hvilke docs/skills som styrte valgene.
+- Hold oppdateringen kort og konkret (ikke full changelog).
 
 ### Feil: `Adding a new skill requires required docs index updates.`
 

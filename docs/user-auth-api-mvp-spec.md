@@ -7,11 +7,15 @@ Strategi i MVP: cookie-basert session (secure-by-default).
 ## Implementasjonsstatus (2026-02-25)
 
 - Implementert: `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/auth/me`, `PATCH /api/users/me`
+- Implementert: `GET /api/auth/csrf`
 - Session-cookie i kode: `sessionId`
 - Login setter `Set-Cookie` med `Path=/`, `HttpOnly`, `SameSite=Lax`
 - Logout invaliderer session server-side og sender clear-cookie (`Max-Age=0`)
 - Rate limiting implementert for `register` og `login`: `5` requests per `10` minutter, nøkkel `ip + normalized email`, respons `429` med generisk feil
-- Gjenstår i MVP-sikkerhet: eksplisitt CSRF-strategi
+- CSRF implementert med signert token avledet fra session-id:
+  - `GET /api/auth/me` returnerer `data.csrfToken` og `x-csrf-token` header
+  - `GET /api/auth/csrf` returnerer `data.csrfToken` og `x-csrf-token` header
+  - State-changing endepunkter for autentisert session krever `X-CSRF-Token`
 
 ## Felles regler
 
@@ -56,6 +60,12 @@ Unsafe metoder (`POST`, `PATCH`, `DELETE`) beskyttes med:
 - `SameSite` + origin/same-origin checks, og/eller
 - CSRF token-strategi.
 
+Nåværende MVP-implementasjon:
+
+- Frontend henter token via `GET /api/auth/me` (evt. `GET /api/auth/csrf`).
+- Frontend sender token i `X-CSRF-Token` for state-changing kall.
+- Backend validerer token for autentiserte state-changing kall og returnerer `403 CSRF_TOKEN_INVALID` ved manglende/ugyldig token.
+
 ## 1) Opprett bruker
 
 ### Endpoint
@@ -79,7 +89,8 @@ Unsafe metoder (`POST`, `PATCH`, `DELETE`) beskyttes med:
   "data": {
     "id": "user-1",
     "email": "alice@example.com",
-    "displayName": "Alice"
+    "displayName": "Alice",
+    "role": "editor"
   }
 }
 ```
@@ -185,11 +196,13 @@ Gyldig session-cookie.
 
 ```json
 {
-  "displayName": "Alice Liddell"
+  "email": "alice@example.com",
+  "displayName": "Alice Liddell",
+  "role": "editor"
 }
 ```
 
-Allowlist i MVP: kun `displayName` og `avatarUrl`.
+Allowlist i MVP: `email`, `displayName`, `role` og `avatarUrl`.
 Ukjente felter avvises (`400`) for å hindre mass assignment.
 
 ### Success (`200`)
@@ -199,6 +212,7 @@ Ukjente felter avvises (`400`) for å hindre mass assignment.
   "data": {
     "id": "user-1",
     "email": "alice@example.com",
+    "role": "editor",
     "displayName": "Alice Liddell"
   }
 }
@@ -208,6 +222,7 @@ Ukjente felter avvises (`400`) for å hindre mass assignment.
 
 - `400` ugyldig input
 - `401` manglende/ugyldig session
+- `409` e-post finnes allerede (`EMAIL_ALREADY_EXISTS`)
 
 ## Valideringsminimum
 

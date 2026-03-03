@@ -48,5 +48,18 @@ Merk: Coverage er et styringssignal, ikke et mål i seg selv. Kvalitet vurderes 
 ## Minstekrav før merge
 
 - Nye/endrede regler har tester
+- Ny/endret atferd dokumenterer RED -> GREEN (test-først)
+- Kontraktsendringer inkluderer minst én test for kontraktskant/-detalj (ikke kun happy path)
 - `npm test` passerer
 - Kritiske use-cases har minst én test
+
+## Kontraktskanter (obligatorisk fokus)
+
+Ved API/DTO/query/valideringsendringer skal testsettet eksplisitt dekke kontraktskanter, spesielt:
+
+- min/maks-grenser (f.eks. `limit`, `pageSize`, lengde/size)
+- ukjente felter/query-parametre
+- ugyldige enum-/statusverdier
+- manglende obligatoriske felter
+
+Manglende kontraktskant-dekning regnes som utilstrekkelig testgrunnlag før merge.

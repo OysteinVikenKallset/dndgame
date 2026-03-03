@@ -2,10 +2,10 @@
 
 ## Mapper per lag
 
-- `src/domain/`: entiteter, value objects, domene-regler
-- `src/application/`: use-cases og porter
-- `src/infrastructure/`: DB/API/filsystem/integrasjoner
-- `src/interface/`: HTTP-ruter, controllere, UI-mapping
+- `Backend/src/domain/`: entiteter, value objects, domene-regler
+- `Backend/src/application/`: use-cases og porter
+- `Backend/src/infrastructure/`: DB/API/filsystem/integrasjoner
+- `Backend/src/interface/`: HTTP-ruter, controllere, UI-mapping
 
 ## Navngiving
 

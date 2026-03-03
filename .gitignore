@@ -20,6 +20,10 @@ pnpm-debug.log*
 .env.*
 !.env.example
 
+# Local SQLite data
+Backend/data/*.sqlite
+Backend/data/backups/
+
 # OS / Editor
 .DS_Store
 Thumbs.db

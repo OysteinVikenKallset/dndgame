@@ -4,7 +4,7 @@
 
 - Owner: Engineering Team
 - Stability: Evolving
-- Last reviewed: 2026-02-25
+- Last reviewed: 2026-03-02
 
 ## Mål
 
@@ -154,6 +154,8 @@ Compliance Summary:
 - Agenten må alltid vurdere docs-impact før avslutning.
 - Hvis kodeendring påvirker kontrakt/policy, skal docs oppdateres i samme endring.
 - Hvis docs ikke oppdateres, skal begrunnelse gis eksplisitt i leveransen.
+- Hvis feilsøking avdekker ny feilmodus eller utilstrekkelig docs, MUST agenten oppdatere relevant runbook/policy i samme endring.
+- Hvis endringen berører CMS-funksjonalitet, MUST agenten oppdatere `docs/cms-api-mvp-spec.md`, `docs/frontend-cms-mvp-spec.md` og `docs/guides/cms-mvp-implementation-workflow.md` i samme endring.
 
 ## Hard Stop-regel
 
@@ -234,6 +236,7 @@ MUST:
 - stoppe ved usikkerhet eller regelkonflikt
 - prioritere enkelhet og minimal endring
 - forklare beslutninger og etterlevelse
+- ved CMS-funksjonalitet: holde `docs/cms-api-mvp-spec.md`, `docs/frontend-cms-mvp-spec.md` og `docs/guides/cms-mvp-implementation-workflow.md` synkronisert
 
 MUST NOT:
 

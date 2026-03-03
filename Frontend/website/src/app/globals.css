@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --border: #e2e8f0;
+
+  --text: #0f172a;
+  --text-muted: #475569;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-active: #1e40af;
+  --focus: #60a5fa;
+
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --info: #0284c7;
+
+  --success-bg: #dcfce7;
+  --warning-bg: #ffedd5;
+  --danger-bg: #fee2e2;
+  --info-bg: #e0f2fe;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-focus: var(--focus);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --color-success-bg: var(--success-bg);
+  --color-warning-bg: var(--warning-bg);
+  --color-danger-bg: var(--danger-bg);
+  --color-info-bg: var(--info-bg);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: var(--primary);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.4);
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--text);
+  padding: 0.5rem 0.75rem;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+.ui-prose {
+  color: var(--text);
+  max-width: 75ch;
+}
+
+.ui-prose h2,
+.ui-prose h3,
+.ui-prose h4 {
+  line-height: 1.25;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.ui-prose h2 {
+  font-size: 1.875rem;
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.ui-prose h3 {
+  font-size: 1.375rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.ui-prose p,
+.ui-prose ul,
+.ui-prose ol,
+.ui-prose blockquote,
+.ui-prose pre {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.ui-prose ul,
+.ui-prose ol {
+  padding-left: 1.25rem;
+}
+
+.ui-prose blockquote {
+  border-left: 3px solid var(--border);
+  color: var(--text-muted);
+  padding-left: 0.9rem;
+}
+
+.ui-prose code {
+  background: var(--surface-2);
+  border-radius: 0.35rem;
+  padding: 0.1rem 0.35rem;
+}
+
+.ui-prose pre {
+  overflow: auto;
+  border-radius: 0.65rem;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  padding: 0.75rem;
+}

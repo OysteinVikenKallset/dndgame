@@ -8,10 +8,12 @@ Gi rask oversikt over hvor ting ligger i prosjektet.
 
 ## Source map
 
-- `src/domain/`: domeneobjekter og regler
-- `src/application/`: use-cases og porter
-- `src/infrastructure/`: adaptere (DB/hash/token/IO)
-- `src/interface/`: HTTP-controller/mapping
+- `Backend/src/domain/`: domeneobjekter og regler
+- `Backend/src/application/`: use-cases og porter
+- `Backend/src/infrastructure/`: adaptere (DB/hash/token/IO)
+- `Backend/src/interface/`: HTTP-controller/mapping
+- `Frontend/admin/src/`: admin-frontend for CMS (React + Vite)
+- `Frontend/website/src/`: separat website-testklient (Next.js)
 
 ## Documentation map
 

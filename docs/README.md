@@ -45,16 +45,31 @@ Any implementation must follow relevant skills.
 - Hvis du skal bygge/endre frontend med React/Next:
   - Les `docs/reference/skill-routing-matrix.md`
   - Les `docs/skills/frontend-architecture-and-code-quality-react-next.skill.md`
+  - Les `docs/skills/test-drevet-utvikling.skill.md`
   - Les `docs/skills/frontend-container-composition-and-props.skill.md`
+  - Les `docs/skills/frontend-accessibility-and-ux-baseline.skill.md`
+  - Les `docs/frontend-cms-mvp-spec.md` når frontend jobber mot CMS-API
+  - Les `docs/frontend-cms-admin-design-spec.md` for visuell baseline
+  - Les `docs/guides/frontend-feature-structure.md`
   - Les `docs/skills/clean-code.skill.md`
   - Les `docs/skills/api-contracts-and-versioning.skill.md`
   - Les `docs/skills/authorization-and-access-control.skill.md` ved authz-styrte UI-handlinger
+- Hvis du skal bygge/endre CMS (headless innhold + public JSON):
+  - Les `docs/reference/skill-routing-matrix.md`
+  - Les `docs/cms-api-mvp-spec.md`
+  - Les `docs/skills/api-contracts-and-versioning.skill.md`
+  - Les `docs/skills/authorization-and-access-control.skill.md`
+  - Les `docs/testing-strategy.md`
 - Hvis du skal modellere data eller endre persistens:
   - Les `docs/reference/skill-routing-matrix.md`
   - Les `docs/skills/data-modeling-persistence.skill.md`
   - Les `docs/skills/database-and-migrations.skill.md`
   - Les `docs/skills/clean-architecture.skill.md`
   - Les `docs/testing-strategy.md`
+- Hvis app/server henger eller oppfører seg ustabilt i lokal kjøring:
+  - Les `docs/runbooks/backend-suspended-process.md`
+  - Les `docs/runbooks/README.md`
+  - Les `docs/skills/project-documentation-system.skill.md`
 - Hvis du skal endre arbeidsprosess/regler:
   - Les `docs/engineering-os-v1.md`
   - Les `docs/team-conventions.md`
@@ -70,13 +85,22 @@ Kjernedokumenter for operativ styring av mennesker + AI:
 - `docs/agents/checklist.md`: Agent-sjekkliste før implementasjon/levering
 - `docs/agents/constitution.md`: Agentkontrakt og stop conditions
 - `.github/pull_request_template.md`: PR-gate med fast `Compliance Summary`
+- `.github/copilot-instructions.md`: repo-spesifikk Copilot-instruksjon som lastes ved prompt
+- `AGENTS.md`: agent-agnostisk "read-first" kontrakt for coding agents
 - `npm run docs:guard` / `npm run docs:guard:ci`: automatisk håndheving av docs-oppdatering ved kodeendring
 - `docs/guides/docs-guard-failures.md`: feilsøking når docs-guard blokkerer commit/CI
+- `docs/runbooks/backend-suspended-process.md`: feilsøking ved suspendert backend-prosess og heng i session-bootstrap
 
 ## Struktur
 
+- `Backend/`: backend/CMS-prosjekt (TypeScript + Express)
+- `Backend/src/`: backend-kildekode (domain/application/infrastructure/interface)
+- `Frontend/admin/`: CMS admin-frontend (React + Vite)
+- `Frontend/website/`: separat website-testprosjekt (Next.js)
+
 - `00-quickstart.md`: Hurtig oppstart for utviklere og AI-agenter
 - `project-overview.md`: Hva prosjektet er, mål, scope og stack
+- `backlog.md`: Prioriterte post-MVP forbedringer og teknisk gjeld med akseptansekriterier
 - `architecture.md`: Hovedarkitektur, moduler og dataflyt
 - `coding-principles.md`: Konkrete koderegler og kvalitetskrav
 - `agent-memory.md`: Levende status for AI-agenter (hva er gjort, hva er neste)
@@ -99,14 +123,23 @@ Kjernedokumenter for operativ styring av mennesker + AI:
 - `skills/database-and-migrations.skill.md`: Operativ standard for migrasjoner, seed-policy, test-DB-strategi og backup/restore light
 - `skills/frontend-container-composition-and-props.skill.md`: Operativ standard for container-komposisjon, props-disciplin, viewModel/actions-kontrakt og controller-hooks
 - `skills/frontend-architecture-and-code-quality-react-next.skill.md`: Operativ standard for frontend-arkitektur, komponentansvar, state/datahenting og testbar React/Next-kode
+- `skills/frontend-accessibility-and-ux-baseline.skill.md`: Operativ baseline for universell utforming, tastaturflyt, form-feiltilstander og grunnleggende UX-kvalitet
 - `skills/project-documentation-system.skill.md`: Operativ docs-standard og håndhevingsregler
 - `user-auth-api-mvp-spec.md`: Konkret endpoint-kontrakt for første versjon av bruker/auth-API
+- `cms-api-mvp-spec.md`: Konkret endpoint-kontrakt for første versjon av headless CMS-API
+- `frontend-cms-mvp-spec.md`: Frontend-spesifikasjon som konsumerer CMS-API-et i MVP
+- `frontend-cms-admin-design-spec.md`: Visuell designbaseline (tokens, komponenter og skjermmønstre) for CMS admin
+- `frontend-website-design-spec.md`: Visuell designbaseline (tokens, layout og fallback-states) for public website (Next.js)
 - `engineering-os-v1.md`: Operativ kortversjon med beslutningstre og sjekklister
 - `team-conventions.md`: Konvensjoner for lag, navn, DTO og feilhåndtering
 - `testing-strategy.md`: Testpyramide og testansvar per lag
 - `ai-work-instructions.md`: Operativ PR-sjekkliste for AI-agenter
 - `.github/pull_request_template.md`: PR-mal med fast `Compliance Summary`-format
+- `.github/copilot-instructions.md`: obligatorisk pre-read + compliance-regler for Copilot
+- `AGENTS.md`: obligatorisk pre-read + compliance-regler for andre agenter
 - `guides/docs-guard-failures.md`: Feilsøkingsguide for docs-guard
+- `runbooks/backend-suspended-process.md`: Runbook for frontend "Checking session..." ved suspendert backend
+- `guides/frontend-feature-structure.md`: Kort guide for frontend feature-struktur og filplassering
 - `reference/design-patterns.md`: Katalog over patterns (GoF + pragmatisk bruk)
 - `reference/object-oriented-programming.md`: OOP-begreper og pragmatiske eksempler
 

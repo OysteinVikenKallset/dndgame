@@ -4,7 +4,7 @@
 
 - Owner: Engineering Team
 - Stability: Stable
-- Last reviewed: 2026-02-24
+- Last reviewed: 2026-03-02
 
 ## Mål
 
@@ -68,6 +68,18 @@ Hvis testen ikke feiler før implementasjon, skal agenten:
 
 Dette skal forhindre falsk TDD.
 
+## TDD-gate for ny atferd (obligatorisk)
+
+For hver ny atferd (eller endret observerbar atferd) MUST leveransen inneholde eksplisitt RED-bevis:
+
+- testnavn som representerer ny atferd
+- kort RED-bevis (f.eks. kommando + at testen feilet av riktig grunn)
+- kort GREEN-bevis (samme test/sett er grønn etter minimal implementasjon)
+
+Hvis RED-bevis mangler, regnes leveransen som ikke-TDD selv om tester finnes.
+
+Dette kravet gjelder også når testen skrives i eksisterende testfil.
+
 ## Hva "Confirm failure" betyr
 
 For STEP 2 gjelder følgende:
@@ -100,6 +112,12 @@ Hvis testen feiler av feil grunn, er den ikke gyldig RED.
 9. Én grunn til å feile
 
 - Testen skal feile av én tydelig årsak.
+
+12. Kontraktskanter må prioriteres eksplisitt
+
+- For API-/DTO-/query-atferd skal minst én ny test dekke kontraktskant i samme endring.
+- Typiske kontraktskanter: min/maks grenser, ukjent felt/query, ugyldig enum/verdi, manglende obligatorisk felt.
+- Happy path alene er ikke tilstrekkelig når atferden påvirker kontrakt.
 
 ## Arkitekturregler
 
@@ -193,9 +211,11 @@ Ikke tillatt under refaktorering:
 En oppgave anses ferdig når:
 
 - relevant test ble skrevet først og observert rød
+- RED-bevis er dokumentert i leveranse/PR
 - implementasjon ble gjort i minimale grønne steg
 - refaktorering ble gjort kun med grønne tester
 - all ny atferd er dekket av lesbare, stabile tester
+- kontraktskanter er dekket når endringen påvirker API-/DTO-/query-kontrakt
 
 ## Operativ kontrakt for AI-agenter
 

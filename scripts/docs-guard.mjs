@@ -103,18 +103,31 @@ if (changedFiles.length === 0) {
 }
 
 const changedSet = new Set(changedFiles);
-const codeChanged = changedFiles.some(
-  (filePath) => filePath.startsWith("src/") && filePath.endsWith(".ts"),
+const backendCodeChanged = changedFiles.some(
+  (filePath) => filePath.startsWith("Backend/src/") && filePath.endsWith(".ts"),
 );
+const frontendCodeChanged = changedFiles.some(
+  (filePath) =>
+    filePath.startsWith("Frontend/admin/src/") &&
+    /\.(js|jsx|ts|tsx)$/.test(filePath),
+);
+const codeChanged = backendCodeChanged || frontendCodeChanged;
 const docsChanged = changedFiles.some((filePath) =>
   filePath.startsWith("docs/"),
 );
 
 if (codeChanged && !docsChanged) {
   fail("Code changes require docs updates in the same change set.", [
-    "Changed code under src/ detected.",
+    "Changed code under Backend/src/ or Frontend/admin/src/ detected.",
     "No files under docs/ were changed.",
     "Update relevant docs or explain/document policy in docs within this change.",
+  ]);
+}
+
+if (codeChanged && !changedSet.has("docs/agent-memory.md")) {
+  fail("Code changes require explicit update to docs/agent-memory.md.", [
+    "This repository enforces a visible compliance trace for AI-assisted edits.",
+    "Update docs/agent-memory.md with what changed, why, and relevant docs used.",
   ]);
 }
 

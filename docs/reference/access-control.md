@@ -33,6 +33,7 @@ Nye actions kan ikke brukes før de er lagt til her og i policy.
 ## Notater
 
 - Ownership evalueres før muterende handlinger.
+- Hard delete av page er kun tillatt når page-status er `ARCHIVED`.
 - `change_role` krever eksplisitt høyere privilegium.
 - Bruker kan aldri endre egen rolle uten eksplisitt admin-policy.
 
