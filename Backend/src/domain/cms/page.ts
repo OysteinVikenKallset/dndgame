@@ -13,6 +13,7 @@ export type CmsPage = {
   locale: string;
   status: PageStatus;
   template?: PageTemplate;
+  showTitle?: boolean;
   showInNav?: boolean;
   createdAt: string;
   updatedAt: string;
@@ -32,6 +33,7 @@ export type PagePublicationSnapshot = {
   locale: string;
   title: string;
   template?: PageTemplate;
+  showTitle?: boolean;
   showInNav?: boolean;
   createdAt?: string;
   publishedAt: string;

@@ -53,6 +53,7 @@ const ALLOWED_KEYS = new Set([
   "title",
   "slug",
   "template",
+  "showTitle",
   "showInNav",
   "components",
   "bodyRichText",
@@ -101,6 +102,7 @@ export async function handleUpdatePageRequest(
     const title = request.body["title"];
     const slug = request.body["slug"];
     const template = request.body["template"];
+    const showTitle = request.body["showTitle"];
     const showInNav = request.body["showInNav"];
     const bodyRichText = request.body["bodyRichText"];
     const components = request.body["components"];
@@ -135,6 +137,21 @@ export async function handleUpdatePageRequest(
       );
     }
 
+    if (showTitle !== undefined && typeof showTitle !== "boolean") {
+      return createApiErrorResponse(
+        400,
+        "INVALID_PAGE_INPUT",
+        "Fix the highlighted fields",
+        [
+          {
+            path: "showTitle",
+            code: "INVALID_TYPE",
+            message: "showTitle must be a boolean",
+          },
+        ],
+      );
+    }
+
     const result = await updatePage(
       {
         sessionId: extractSessionId(request.headers.cookie),
@@ -143,6 +160,7 @@ export async function handleUpdatePageRequest(
         ...(typeof title === "string" ? { title } : {}),
         ...(typeof slug === "string" ? { slug } : {}),
         ...(template === "page" || template === "post" ? { template } : {}),
+        ...(typeof showTitle === "boolean" ? { showTitle } : {}),
         ...(typeof showInNav === "boolean" ? { showInNav } : {}),
         ...(Array.isArray(components)
           ? {

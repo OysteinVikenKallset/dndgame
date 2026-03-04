@@ -123,6 +123,11 @@ Frontend forventer:
 - `components` (blocks-basert content-model)
 - `bodyRichText` er kun legacy-fallback for eldre sider
 
+Edit-roundtrip-regel (MVP):
+
+- Ved innlasting av eksisterende sider må frontend beholde alle kjente blokktyper (`richText`/`image`/`textImage`/`quote`) også når enkeltdeler av `props` mangler, ved å normalisere til sikre defaults i form-state.
+- Frontend skal ikke stille filtrere bort kjente blokker i editoren; manglende obligatoriske felt håndteres som valideringsfeil ved lagring med tydelige feltfeil.
+
 ### 5.3 Validation error contract
 
 Ved `400 VALIDATION_ERROR`:
@@ -154,6 +159,7 @@ Ved `409 CONFLICT_VERSION`:
   "slug": "string",
   "locale": "en",
   "template": "page",
+  "showTitle": true,
   "showInNav": true,
   "components": [
     {
@@ -173,6 +179,7 @@ Ved `409 CONFLICT_VERSION`:
   "title": "string",
   "slug": "string",
   "template": "page",
+  "showTitle": true,
   "showInNav": true,
   "components": [
     {
@@ -324,13 +331,32 @@ Block allowlist (MVP):
 - `image`
 - `textImage`
 - `quote`
+- `button`
+- `headline`
+- `grid`
+
+Public rendering UX baseline (website):
+
+- CMS-blokker skal rendres uten tvungne card/border-wrappere per blokk.
+- `button`-blokk og primære website-knapper skal bruke action-grønn token-familie (`action`/`action-hover`/`action-active`).
+- Klasse-styrte lenkestiler i komponenter skal ha prioritet over global default-lenkefarge.
+- `grid`-blokk skal kunne styre bredde (`100%`/`50%`/`33%`/`25%`), intern innholdsjustering (`left`/`center`/`right`) og plassering av selve grid-container (`left`/`center`/`right`).
 
 Editor interaction (MVP):
 
 - Legg til block fra typevelger
 - Rediger block-felter inline i listen
-- Endre rekkefølge med enkle `Up`/`Down`-handlinger per block (drag-and-drop kan komme senere)
+- `grid`-block skal kunne inneholde egne child components (`components[]`) i editoren
+- Endre rekkefølge med drag-and-drop per block
+- Drag-and-drop skal støtte flytting mellom root-listen og `grid` child-lister (inn i/ut av grid og mellom ulike grids)
+- Drag-and-drop skal trigges fra eksplisitt drag-handle per block, ikke ved tekstseleksjon i input/textarea
+- Hver block (inkl. child blocks inne i `grid`) skal ha en liten dupliser-handling med ikon i topphjørnet som kopierer blocken rett etter originalen
+- `Up`/`Down`-handlinger kan beholdes som fallback
 - Slett block per item
+
+Grid-begrensning (MVP):
+
+- Child components inne i `grid` kan være eksisterende innholdsblokker, men nested `grid` inne i `grid` er ikke støttet i MVP.
 
 Media policy i editor (MVP):
 
@@ -338,6 +364,8 @@ Media policy i editor (MVP):
 - Editor skal kunne velge media fra bibliotek og binde valgt `mediaId` til block props.
 - Lokal disk-lagring i backend er akseptert for MVP.
 - Ved edit/save skal frontend tolerere eksisterende blokker uten `props.url` ved innlasting, og hydrere `url` fra media-listen før submit når `mediaId` finnes.
+- Frontend forutsetter at backend eksponerer samme `/uploads/*`-mapping uavhengig av om backend startes fra repo-root eller `Backend/`.
+- Public website-klienten SHOULD bruke same-origin asset-proxy (`/api/cms-assets/*`) for relative media-paths, slik at sluttbrukers browser ikke er avhengig av direkte tilgang til CMS-backend-port.
 
 Frontend-validering (UX, backend er source of truth):
 
@@ -351,20 +379,35 @@ Editor-felter:
 - `Slug` (label + required)
 - `Locale` (read-only `en` i MVP, men vis feltet)
 - `Template` (`page` eller `post`, default `page`)
-- `Show in navigation` (`boolean`, default `true`)
+- `Show page title on website` (`boolean`, default `true`)
 - `Status` (read-only; endres via publish/archive)
 - `Content blocks` (`components[]` med enkel reorder)
 
+Layout (MVP):
+
+- Edit/create-view skal bruke tre soner: venstre `Component overview`, midt `Content`, høyre `Page settings`.
+- `Page settings` skal inneholde sidefelt som `Title`, `Slug`, `Locale`, `Template` (og status/version i edit).
+- `Page settings` skal inneholde sidefelt som `Title`, `Slug`, `Locale`, `Template`, `Show page title on website` (og status/version i edit).
+- `Component overview` viser rekkefølge over blocks (inkl. children i `grid`) for rask navigasjon/oversikt.
+- `Component overview` skal være klikkbar og scroll/fokusere valgt block i `Content`-kolonnen.
+- `Component overview` skal støtte drag-and-drop for rekkefølgejustering av blocks (inkludert child blocks i `grid`).
+- Drag i `Component overview` skal kunne startes direkte fra komponentnavnet (ikke eget drag-ikon), og sist valgte item skal markeres aktivt.
+- `Content`-kolonnen skal vise drop-indikator som horisontal linje kun mens drag-and-drop pågår (ikke permanente synlige drop-bokser i idle state).
+- Tomme `grid` skal fortsatt ha fungerende drop-target i både `Content` og `Component overview`, slik at en eksisterende komponent kan dras inn som første child.
+- `Page settings` skal vises som accordion (collapsible), lukket som default til bruker ekspanderer den.
+- `showInNav` skal ikke redigeres i page editor; navigasjonsvalg styres i dedikert menu-flate.
+
 Editor-actions (MUST):
 
-- `Publish`, `Unpublish`, `Archive` vises i egen vertikal actions-kolonne til høyre i edit-view.
-- `Save` er primær handling nederst i edit-formen.
+- `Save & publish`/`Save & republish`, `Unpublish`, `Archive` vises i egen vertikal actions-kolonne til høyre i edit-view.
+- Actions-kolonnen skal være visuelt knyttet til `Page settings` i høyre kolonne, mens `Content` bruker midtkolonnen.
+- Primær publiseringsknapp skal være synlig over `Page settings` også når accordion er lukket.
+- `Save & publish`/`Save & republish`, `Unpublish` og `Archive` skal ligge over `Page settings`-accordion (ikke inni accordion-innholdet).
 - `Content` (`components[]`, blocks-first)
 
 Editor actions:
 
-- `Save` (`PATCH`/`POST` avhengig av view)
-- `Publish` (`POST publish`)
+- `Save & publish` (`PATCH` + `POST publish` i ett klikk)
 - `Archive` (`POST archive`)
 - `Delete` (`DELETE /api/pages/:id`) kun når status er `ARCHIVED`
 
@@ -448,6 +491,7 @@ MUST:
 4. én editor-test for block rekkefølge (reorder-handling)
 5. én editor-test for block-validering (ukjent type/ugyldige props fra API)
 6. én media-valgflyt-test (`image`/`textImage` binder riktig `mediaId`)
+7. én editor-test for nye interaktive blocks (`button` lenke/new-tab + `headline` level)
 
 SHOULD:
 

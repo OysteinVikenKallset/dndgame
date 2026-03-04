@@ -78,6 +78,7 @@ Test minimum:
 - [ ] `403` forbidden
 - [ ] `404` not found
 - [ ] `409` conflict + `CONFLICT_VERSION` ved versjonskollisjon
+- [ ] `showTitle` persisteres i page create/update og følger med i public snapshot/delivery
 
 ### Content (public)
 
@@ -95,7 +96,7 @@ Test minimum:
 
 ### Blocks + media
 
-- `components[]` med allowlist (`richText`, `image`, `textImage`, `quote`)
+- `components[]` med allowlist (`richText`, `image`, `textImage`, `quote`, `button`, `headline`, `grid`)
 - `POST /api/media`
 - `GET /api/media`
 
@@ -130,9 +131,23 @@ Implementert (hovedlinjer):
 - Public API: liste, slug-oppslag, preview og content settings.
 - Snapshot-basert publisering og cache-policy (`Cache-Control: no-store`) er på plass.
 - Authz policy: `editor` begrenset til egne sider, `admin` full tilgang.
-- Blocks-first baseline er implementert i API/admin/website (`richText`, `image`, `textImage`, `quote`).
+- Blocks-first baseline er implementert i API/admin/website (`richText`, `image`, `textImage`, `quote`, `button`, `headline`, `grid`).
 - Media-bibliotek baseline er implementert med `POST/GET /api/media` og lokal disk-lagring i backend.
 - Admin editor hydrerer nå manglende media-URL (`mediaId -> url`) før create/update, slik at eksisterende image/textImage-blokker kan lagres oppdatert også når `props.url` mangler i innlastet data.
+- Admin edit-flow normaliserer nå kjente blokktyper tolerant ved innlasting (trygge defaults for manglende props), slik at blokker ikke forsvinner fra editor etter første lagring og kan korrigeres med feltvalidering.
+- Upload/static filsti for media er hardnet til å fungere likt ved backend-oppstart fra både repo-root og `Backend/`, for å unngå broken `/uploads/*` i website/admin.
+- Website bruker nå same-origin asset-proxy (`/api/cms-assets/*`) for relative media-URL-er, slik at bilder virker også når browser ikke kan nå CMS-backend-port direkte.
+- Website-rendring av CMS-blokker er nå gjort enklere visuelt uten tvungne card/border-wrappere per blokk.
+- Website-knapper (inkl. `button`-blokk) bruker nå grønn action-token-palett (`action`/`action-hover`/`action-active`) som del av public UX-baseline.
+- `grid`-blokk er nå implementert end-to-end med styring av bredde/innholdsjustering/plassering og nested child components i editor/renderer (nested grid er bevisst ikke støttet i MVP).
+- Admin editor har nå native drag-and-drop for rekkefølge på tvers av root/grid, inkludert flytting av komponenter inn i og ut av grid.
+- Admin editor støtter nå duplisering av blocks via liten ikonknapp per block (inkludert child blocks i `grid`), og actions-kolonnen i edit-view er flyttet til `Page details` slik at `Content` bruker full bredde under.
+- Drag-and-drop i editor er nå strammet inn til eksplisitt drag-handle per block (unngår konflikt med tekstmarkering), og flytting mellom ulike grids er verifisert.
+- Page editor/create bruker nå tre paneler (`Component overview` venstre, `Content` midt, `Page settings` høyre), der `Page settings` er en collapsible accordion; `showInNav` redigeres ikke lenger i page editor (styres i menu-flate).
+- `Component overview` fungerer nå både som navigasjon (klikk => scroll/fokus til valgt block i content) og som egen drag-and-drop-flate for rekkefølgejustering av blocks/child-blocks.
+- Drag i `Component overview` starter nå fra komponentnavn (drag-ikon fjernet i overview), og sist valgt item vises med aktiv markering.
+- `Content`-kolonnen bruker nå drag-only drop-indikatorer (horisontal linje) i stedet for permanente synlige drop-bokser, inkludert robust drop-target for tomme grids.
+- Edit-flow bruker nå én synlig primærknapp for publisering (`Save & publish` / `Save & republish`) som lagrer og publiserer i ett klikk.
 
 Gjenstående kritiske MVP-gap:
 
@@ -140,6 +155,5 @@ Gjenstående kritiske MVP-gap:
 - Session-cookie-policy mangler eksplisitt `Secure` i produksjon.
 - Foundation/DB-kontrakt for publisert slug-locale må strammes inn tydelig.
 - Konsistent `fieldErrors`-shape er delvis implementert (inkl. blokkvalidering), men ikke fullstendig verifisert på tvers av alle valideringsfeil.
-- Full drag-and-drop i editor er ikke implementert ennå (MVP bruker enkel reorder med `Up`/`Down`).
 - Tastaturflyt-test for kritisk adminflyt mangler.
 - Egen, eksplisitt CI-verifisering av migrasjonskjøring mangler.

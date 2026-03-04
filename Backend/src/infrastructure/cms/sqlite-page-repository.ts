@@ -16,6 +16,7 @@ type PageRow = {
   locale: string;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   template: "page" | "post";
+  show_title: number;
   show_in_nav: number;
   created_at: string;
   updated_at: string;
@@ -35,6 +36,7 @@ type SnapshotRow = {
   locale: string;
   title: string;
   template: "page" | "post";
+  show_title: number | null;
   show_in_nav: number | null;
   created_at: string | null;
   published_at: string;
@@ -89,6 +91,7 @@ function mapPage(row: PageRow | undefined): CmsPage | null {
     locale: row.locale,
     status: row.status,
     template: row.template,
+    showTitle: row.show_title === 0 ? false : true,
     showInNav: row.show_in_nav === 0 ? false : true,
     createdAt: row.created_at ?? row.published_at,
     updatedAt: row.updated_at,
@@ -120,6 +123,7 @@ function mapSnapshot(
     locale: row.locale,
     title: row.title,
     template: row.template,
+    showTitle: row.show_title === 0 ? false : true,
     showInNav: row.show_in_nav === 0 ? false : true,
     createdAt: row.created_at ?? row.published_at,
     publishedAt: row.published_at,
@@ -143,7 +147,7 @@ export class SqlitePageRepository implements CmsPageRepository {
     const row = this.db
       .prepare(
         `SELECT id, slug, title, locale, status, created_at, updated_at, published_at,
-          template, show_in_nav, created_by, updated_by, version, content_schema_version,
+          template, show_title, show_in_nav, created_by, updated_by, version, content_schema_version,
                 components_json, body_rich_text
          FROM pages
          WHERE id = ?`,
@@ -160,7 +164,7 @@ export class SqlitePageRepository implements CmsPageRepository {
     const row = this.db
       .prepare(
         `SELECT id, slug, title, locale, status, created_at, updated_at, published_at,
-          template, show_in_nav, created_by, updated_by, version, content_schema_version,
+          template, show_title, show_in_nav, created_by, updated_by, version, content_schema_version,
                 components_json, body_rich_text
          FROM pages
          WHERE slug = ? AND locale = ?
@@ -201,7 +205,7 @@ export class SqlitePageRepository implements CmsPageRepository {
     const rows = this.db
       .prepare(
         `SELECT id, slug, title, locale, status, created_at, updated_at, published_at,
-          template, show_in_nav, created_by, updated_by, version, content_schema_version,
+          template, show_title, show_in_nav, created_by, updated_by, version, content_schema_version,
                 components_json, body_rich_text
          FROM pages
          ${whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : ""}`,
@@ -248,6 +252,7 @@ export class SqlitePageRepository implements CmsPageRepository {
     locale: string;
     createdBy: string;
     template?: "page" | "post";
+    showTitle?: boolean;
     showInNav?: boolean;
     contentSchemaVersion: number;
     components?: Array<{
@@ -262,19 +267,20 @@ export class SqlitePageRepository implements CmsPageRepository {
       .prepare(
         `INSERT INTO pages (
            slug, title, locale, status,
-           template, show_in_nav,
+           template, show_title, show_in_nav,
            created_at, updated_at,
            created_by, updated_by,
            version, content_schema_version,
            components_json, body_rich_text
          )
-         VALUES (?, ?, ?, 'DRAFT', ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)`,
+         VALUES (?, ?, ?, 'DRAFT', ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)`,
       )
       .run(
         input.slug,
         input.title,
         input.locale,
         input.template ?? "page",
+        input.showTitle === false ? 0 : 1,
         input.showInNav === false ? 0 : 1,
         now,
         now,
@@ -304,6 +310,7 @@ export class SqlitePageRepository implements CmsPageRepository {
       title?: string;
       status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
       template?: "page" | "post";
+      showTitle?: boolean;
       showInNav?: boolean;
       updatedBy: string;
       publishedAt?: string | null;
@@ -334,6 +341,7 @@ export class SqlitePageRepository implements CmsPageRepository {
     const nextTitle = input.title ?? current.title;
     const nextStatus = input.status ?? current.status;
     const nextTemplate = input.template ?? current.template;
+    const nextShowTitle = input.showTitle ?? current.showTitle ?? true;
     const nextShowInNav = input.showInNav ?? current.showInNav ?? true;
     const nextPublishedAt =
       input.publishedAt !== undefined
@@ -355,6 +363,7 @@ export class SqlitePageRepository implements CmsPageRepository {
                    title = ?,
                    status = ?,
                    template = ?,
+                   show_title = ?,
                    show_in_nav = ?,
                    updated_at = ?,
                    published_at = ?,
@@ -369,6 +378,7 @@ export class SqlitePageRepository implements CmsPageRepository {
               nextTitle,
               nextStatus,
               nextTemplate,
+              nextShowTitle === false ? 0 : 1,
               nextShowInNav === false ? 0 : 1,
               now,
               nextPublishedAt,
@@ -386,6 +396,7 @@ export class SqlitePageRepository implements CmsPageRepository {
                    title = ?,
                    status = ?,
                    template = ?,
+                   show_title = ?,
                    show_in_nav = ?,
                    updated_at = ?,
                    published_at = ?,
@@ -400,6 +411,7 @@ export class SqlitePageRepository implements CmsPageRepository {
               nextTitle,
               nextStatus,
               nextTemplate,
+              nextShowTitle === false ? 0 : 1,
               nextShowInNav === false ? 0 : 1,
               now,
               nextPublishedAt,
@@ -449,7 +461,7 @@ export class SqlitePublicationRepository implements CmsPublicationRepository {
   > {
     const rows = this.db
       .prepare(
-        `SELECT ps.page_id, ps.slug, ps.locale, ps.title, ps.template, p.show_in_nav, ps.created_at, ps.published_at
+        `SELECT ps.page_id, ps.slug, ps.locale, ps.title, ps.template, p.show_title, p.show_in_nav, ps.created_at, ps.published_at
          FROM publication_snapshots ps
          INNER JOIN pages p ON p.id = CAST(SUBSTR(ps.page_id, 6) AS INTEGER)
          INNER JOIN (
@@ -468,6 +480,7 @@ export class SqlitePublicationRepository implements CmsPublicationRepository {
       locale: string;
       title: string;
       template: "page" | "post";
+      show_title: number;
       show_in_nav: number;
       created_at: string;
       published_at: string;
@@ -479,6 +492,7 @@ export class SqlitePublicationRepository implements CmsPublicationRepository {
       locale: row.locale,
       title: row.title,
       template: row.template,
+      showTitle: row.show_title === 0 ? false : true,
       showInNav: row.show_in_nav === 0 ? false : true,
       createdAt: row.created_at,
       publishedAt: row.published_at,
@@ -491,6 +505,7 @@ export class SqlitePublicationRepository implements CmsPublicationRepository {
     locale: string;
     title: string;
     template: "page" | "post";
+    showTitle?: boolean;
     showInNav?: boolean;
     createdAt: string;
     publishedAt: string;
@@ -505,9 +520,9 @@ export class SqlitePublicationRepository implements CmsPublicationRepository {
       .prepare(
         `INSERT INTO publication_snapshots (
            page_id, slug, locale, title, template, created_at, published_at,
-           show_in_nav, published_version, components_json, body_rich_text
+            show_title, show_in_nav, published_version, components_json, body_rich_text
          )
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .run(
         input.pageId,
@@ -517,6 +532,7 @@ export class SqlitePublicationRepository implements CmsPublicationRepository {
         input.template,
         input.createdAt,
         input.publishedAt,
+        input.showTitle === false ? 0 : 1,
         input.showInNav === false ? 0 : 1,
         input.publishedVersion,
         input.components ? JSON.stringify(input.components) : null,
@@ -527,7 +543,7 @@ export class SqlitePublicationRepository implements CmsPublicationRepository {
 
     const row = this.db
       .prepare(
-        `SELECT id, page_id, slug, locale, title, template, show_in_nav, created_at, published_at, published_version,
+        `SELECT id, page_id, slug, locale, title, template, show_title, show_in_nav, created_at, published_at, published_version,
                 components_json, body_rich_text
          FROM publication_snapshots
          WHERE id = ?`,
@@ -549,7 +565,7 @@ export class SqlitePublicationRepository implements CmsPublicationRepository {
   ): Promise<PagePublicationSnapshot | null> {
     const row = this.db
       .prepare(
-        `SELECT id, page_id, slug, locale, title, template, show_in_nav, created_at, published_at, published_version,
+        `SELECT id, page_id, slug, locale, title, template, show_title, show_in_nav, created_at, published_at, published_version,
                 components_json, body_rich_text
          FROM publication_snapshots
          WHERE slug = ? AND locale = ?

@@ -332,6 +332,61 @@ describe("createPage", () => {
     expect(capturedShowInNav).toBe(false);
   });
 
+  it("persists showTitle when explicitly disabled", async () => {
+    let capturedShowTitle: boolean | undefined;
+
+    await createPage(
+      {
+        sessionId: "session-user-1",
+        slug: "hidden-title",
+        title: "Hidden title",
+        locale: "en",
+        showTitle: false,
+      },
+      {
+        sessionService: {
+          createSession: () => "session-user-1",
+          getUserId: () => "user-1",
+          invalidateSession: () => {},
+        },
+        userRepository: {
+          findByEmail: async () => null,
+          findById: async () => ({
+            id: "user-1",
+            email: "alice@example.com",
+            passwordHash: "hash",
+          }),
+        },
+        pageRepository: {
+          findById: async () => null,
+          findBySlugAndLocale: async () => null,
+          create: async (input) => {
+            capturedShowTitle = input.showTitle;
+            return {
+              id: "page-3b",
+              slug: input.slug,
+              title: input.title,
+              locale: input.locale,
+              status: "DRAFT",
+              ...(input.showTitle !== undefined
+                ? { showTitle: input.showTitle }
+                : {}),
+              createdAt: "x",
+              updatedAt: "x",
+              createdBy: input.createdBy,
+              updatedBy: input.createdBy,
+              version: 1,
+              contentSchemaVersion: input.contentSchemaVersion,
+            };
+          },
+          update: async () => null,
+        },
+      },
+    );
+
+    expect(capturedShowTitle).toBe(false);
+  });
+
   it("persists validated components on create", async () => {
     let capturedComponents:
       | Array<{ componentType: string; props: Record<string, unknown> }>

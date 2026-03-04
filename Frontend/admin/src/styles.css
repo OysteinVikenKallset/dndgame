@@ -98,7 +98,7 @@ textarea:focus-visible {
 }
 
 .app-shell {
-  max-width: 1140px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: var(--s-5);
 }
@@ -546,10 +546,147 @@ textarea:focus-visible {
 }
 
 .editor-layout {
-  max-width: 760px;
+  max-width: none;
+}
+
+.editor-workspace-shell {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr) 240px;
+  gap: var(--s-5);
+  align-items: start;
+}
+
+.editor-settings-accordion {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: var(--s-3);
+}
+
+.editor-settings-summary {
+  cursor: pointer;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  list-style: none;
+}
+
+.editor-settings-summary::-webkit-details-marker {
+  display: none;
+}
+
+.editor-settings-summary::before {
+  content: "▸";
+  margin-right: var(--s-2);
+  color: var(--text-muted);
+}
+
+.editor-settings-accordion[open] .editor-settings-summary::before {
+  content: "▾";
+}
+
+.editor-settings-accordion .editor-sidebar,
+.editor-settings-accordion .editor-grid,
+.editor-settings-accordion .ui-form-field {
+  margin-top: var(--s-3);
+}
+
+.editor-settings-panel,
+.editor-content-panel,
+.editor-outline-panel {
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+}
+
+.editor-outline-list {
+  margin: 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: var(--s-2);
+}
+
+.editor-outline-item {
+  border-radius: var(--radius-sm);
+}
+
+.editor-outline-item--active {
+  background: var(--hover);
+}
+
+.editor-outline-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.editor-outline-link {
+  border: none;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  padding: var(--s-1) 0;
+  width: 100%;
+}
+
+.editor-outline-link:hover {
+  color: var(--primary);
+}
+
+.editor-outline-link[draggable="true"] {
+  cursor: grab;
+}
+
+.editor-outline-link[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.editor-drop-indicator {
+  border-top: 2px solid transparent;
+  min-height: 0;
+  margin: 0;
+}
+
+.editor-drop-indicator--visible {
+  min-height: 0.75rem;
+  border-top-color: var(--border);
+}
+
+.editor-content-drop-indicator {
+  width: 100%;
+}
+
+.editor-outline-drop-indicator {
+  list-style: none;
+}
+
+.editor-drop-indicator--empty {
+  min-height: 2rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.editor-outline-list ul {
+  margin: var(--s-1) 0 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: var(--s-1);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.ui-card[tabindex="-1"]:focus {
+  box-shadow: var(--focus-ring);
 }
 
 .editor-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  gap: var(--s-5);
+  align-items: start;
+}
+
+.editor-details-shell {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 180px;
   gap: var(--s-5);
@@ -571,6 +708,63 @@ textarea:focus-visible {
   align-items: center;
   gap: var(--s-2);
   margin-top: var(--s-2);
+}
+
+.editor-component-stack {
+  gap: var(--s-2);
+}
+
+.editor-content-panel [id^="component-"].ui-card {
+  padding-top: var(--s-2);
+  padding-bottom: var(--s-2);
+  gap: var(--s-2);
+}
+
+.editor-component-card--grid {
+  background: var(--surface-2);
+}
+
+.editor-card-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--s-1);
+  margin-bottom: calc(var(--s-2) * -1);
+}
+
+.editor-drag-handle,
+.editor-duplicate-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.editor-drag-handle {
+  color: var(--text-muted);
+}
+
+.editor-drag-handle:hover,
+.editor-duplicate-button:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.editor-drag-handle:disabled,
+.editor-duplicate-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.editor-auto-grow-textarea {
+  overflow: hidden;
+  resize: none;
+  min-height: 8rem;
 }
 
 .editor-section-title {
@@ -652,6 +846,14 @@ pre {
   }
 
   .editor-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-details-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-workspace-shell {
     grid-template-columns: 1fr;
   }
 }

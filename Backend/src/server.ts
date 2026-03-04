@@ -1,6 +1,5 @@
 import express, { type Request, type Response } from "express";
 import multer from "multer";
-import { resolve } from "node:path";
 import { PlainPasswordHasher } from "./infrastructure/auth/plain-password-hasher";
 import { InMemoryRateLimiter } from "./infrastructure/rate-limit/in-memory-rate-limiter";
 import {
@@ -35,13 +34,11 @@ import {
   handleUploadMediaRequest,
 } from "./interface/http/media-controller";
 import { extractSessionId } from "./interface/http/session-cookie";
+import { resolveUploadsDirectory } from "./infrastructure/filesystem/resolve-uploads-directory";
 
 const app = express();
 app.use(express.json());
-app.use(
-  "/uploads",
-  express.static(resolve(process.cwd(), "Backend/data/uploads")),
-);
+app.use("/uploads", express.static(resolveUploadsDirectory()));
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -454,6 +451,9 @@ app.post("/api/pages", async (request: Request, response: Response) => {
         ...(request.body?.template === "page" ||
         request.body?.template === "post"
           ? { template: request.body.template }
+          : {}),
+        ...(typeof request.body?.showTitle === "boolean"
+          ? { showTitle: request.body.showTitle }
           : {}),
         ...(typeof request.body?.showInNav === "boolean"
           ? { showInNav: request.body.showInNav }

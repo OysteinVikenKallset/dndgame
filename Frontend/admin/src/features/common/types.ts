@@ -9,6 +9,9 @@ export type Toast = {
   message: string;
 };
 
+export type GridWidth = "100" | "50" | "33" | "25";
+export type GridAlign = "left" | "center" | "right";
+
 export type PageComponent =
   | {
       componentType: "richText";
@@ -42,12 +45,37 @@ export type PageComponent =
         quote: string;
         author?: string;
       };
+    }
+  | {
+      componentType: "button";
+      props: {
+        label: string;
+        url: string;
+        openInNewTab: boolean;
+      };
+    }
+  | {
+      componentType: "headline";
+      props: {
+        text: string;
+        level: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+      };
+    }
+  | {
+      componentType: "grid";
+      props: {
+        width: GridWidth;
+        contentAlign: GridAlign;
+        selfAlign: GridAlign;
+        components: PageComponent[];
+      };
     };
 
 export type PageFormValues = {
   title: string;
   slug: string;
   template: "page" | "post";
+  showTitle: boolean;
   showInNav: boolean;
   components: PageComponent[];
   bodyRichText: string;

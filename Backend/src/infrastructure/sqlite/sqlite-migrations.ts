@@ -178,6 +178,30 @@ const SQLITE_MIGRATIONS: SqliteMigration[] = [
       ON media_assets(created_at);
     `,
   },
+  {
+    id: "0007-page-show-title",
+    sql: `
+      ALTER TABLE pages
+      ADD COLUMN show_title INTEGER NOT NULL DEFAULT 1
+      CHECK (show_title IN (0, 1));
+
+      ALTER TABLE publication_snapshots
+      ADD COLUMN show_title INTEGER NOT NULL DEFAULT 1
+      CHECK (show_title IN (0, 1));
+
+      UPDATE publication_snapshots
+      SET show_title = (
+            SELECT p.show_title
+            FROM pages p
+            WHERE p.id = CAST(SUBSTR(publication_snapshots.page_id, 6) AS INTEGER)
+          )
+      WHERE EXISTS (
+            SELECT 1
+            FROM pages p
+            WHERE p.id = CAST(SUBSTR(publication_snapshots.page_id, 6) AS INTEGER)
+          );
+    `,
+  },
 ];
 
 function ensureMigrationsTable(db: Database.Database): void {

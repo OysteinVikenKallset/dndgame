@@ -75,6 +75,7 @@ export type PageDetailsDto = {
   locale: string;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   template?: "page" | "post";
+  showTitle?: boolean;
   showInNav?: boolean;
   components?: Array<{
     componentType: string;
@@ -412,6 +413,7 @@ export const api = {
       slug: string;
       locale: string;
       template: "page" | "post";
+      showTitle: boolean;
       showInNav: boolean;
       components?: Array<{
         componentType: string;
@@ -436,6 +438,7 @@ export const api = {
       title: string;
       slug: string;
       template: "page" | "post";
+      showTitle: boolean;
       showInNav: boolean;
       components?: Array<{
         componentType: string;

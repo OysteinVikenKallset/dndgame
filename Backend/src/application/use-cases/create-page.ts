@@ -10,6 +10,7 @@ type CreatePageInput = {
   title: string;
   locale: string;
   template?: "page" | "post";
+  showTitle?: boolean;
   showInNav?: boolean;
   components?: ComponentInstance[];
   bodyRichText?: string;
@@ -60,6 +61,7 @@ export async function createPage(
   const normalizedTitle = input.title.trim();
   const normalizedLocale = input.locale.trim() || "en";
   const normalizedTemplate = (input.template ?? "page").trim().toLowerCase();
+  const normalizedShowTitle = input.showTitle ?? true;
   const normalizedShowInNav = input.showInNav ?? true;
   let normalizedComponents: ComponentInstance[] | undefined;
 
@@ -83,6 +85,7 @@ export async function createPage(
     normalizedTitle.length === 0 ||
     normalizedLocale.length === 0 ||
     !isValidTemplate(normalizedTemplate) ||
+    typeof normalizedShowTitle !== "boolean" ||
     typeof normalizedShowInNav !== "boolean"
   ) {
     throw new Error(INVALID_PAGE_INPUT_ERROR);
@@ -107,6 +110,7 @@ export async function createPage(
     locale: normalizedLocale,
     createdBy: user.id,
     template: normalizedTemplate,
+    showTitle: normalizedShowTitle,
     showInNav: normalizedShowInNav,
     contentSchemaVersion: 1,
     ...(normalizedComponents !== undefined

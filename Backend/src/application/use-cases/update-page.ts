@@ -11,6 +11,7 @@ type UpdatePageInput = {
   title?: string;
   slug?: string;
   template?: "page" | "post";
+  showTitle?: boolean;
   showInNav?: boolean;
   components?: ComponentInstance[];
   bodyRichText?: string;
@@ -80,6 +81,7 @@ export async function updatePage(
   const normalizedTitle = input.title?.trim();
   const normalizedSlug = input.slug?.trim().toLowerCase();
   const normalizedTemplate = input.template?.trim().toLowerCase();
+  const normalizedShowTitle = input.showTitle;
   const normalizedShowInNav = input.showInNav;
   let normalizedComponents: ComponentInstance[] | undefined;
 
@@ -118,6 +120,13 @@ export async function updatePage(
   }
 
   if (
+    normalizedShowTitle !== undefined &&
+    typeof normalizedShowTitle !== "boolean"
+  ) {
+    throw new Error(UPDATE_INVALID_INPUT_ERROR);
+  }
+
+  if (
     normalizedShowInNav !== undefined &&
     typeof normalizedShowInNav !== "boolean"
   ) {
@@ -148,6 +157,9 @@ export async function updatePage(
     ...(normalizedSlug ? { slug: normalizedSlug } : {}),
     ...(normalizedTitle ? { title: normalizedTitle } : {}),
     ...(normalizedTemplate ? { template: normalizedTemplate } : {}),
+    ...(normalizedShowTitle !== undefined
+      ? { showTitle: normalizedShowTitle }
+      : {}),
     ...(normalizedShowInNav !== undefined
       ? { showInNav: normalizedShowInNav }
       : {}),

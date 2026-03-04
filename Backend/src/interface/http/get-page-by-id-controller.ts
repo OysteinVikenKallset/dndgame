@@ -29,6 +29,7 @@ type GetPageByIdResponse = {
   locale: string;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   template?: "page" | "post";
+  showTitle?: boolean;
   showInNav?: boolean;
   version: number;
   updatedAt: string;

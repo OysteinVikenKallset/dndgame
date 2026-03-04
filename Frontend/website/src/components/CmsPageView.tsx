@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 type CmsPageViewProps = {
   title: string;
+  showTitle?: boolean;
   template: "page" | "post";
   lead?: string;
   createdAt: string;
@@ -10,6 +11,7 @@ type CmsPageViewProps = {
 
 export function CmsPageView({
   title,
+  showTitle = true,
   template,
   lead,
   createdAt,
@@ -18,11 +20,15 @@ export function CmsPageView({
   return (
     <article className="w-full">
       <header className="mb-10 pt-2 sm:pt-4">
-        <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
-          {title}
-        </h1>
+        {showTitle ? (
+          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
+            {title}
+          </h1>
+        ) : null}
         {template === "post" ? (
-          <p className="mt-2 text-sm text-text-muted">
+          <p
+            className={`${showTitle ? "mt-2" : "mt-0"} text-sm text-text-muted`}
+          >
             Created {new Date(createdAt).toLocaleDateString("en-GB")}
           </p>
         ) : null}

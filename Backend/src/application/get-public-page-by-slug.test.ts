@@ -23,6 +23,7 @@ describe("getPublicPageBySlug", () => {
             slug: "about-us",
             locale: "en",
             title: "About",
+            showTitle: false,
             publishedAt: "2026-02-28T10:00:00.000Z",
             publishedVersion: 2,
             components: [
@@ -45,6 +46,7 @@ describe("getPublicPageBySlug", () => {
       slug: "about-us",
       locale: "en",
       title: "About",
+      showTitle: false,
       publishedAt: "2026-02-28T10:00:00.000Z",
       components: [
         {

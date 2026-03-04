@@ -66,6 +66,9 @@ export async function publishPage(
     locale: updatedPage.locale,
     title: updatedPage.title,
     ...(updatedPage.template ? { template: updatedPage.template } : {}),
+    ...(updatedPage.showTitle === false
+      ? { showTitle: false }
+      : { showTitle: true }),
     ...(updatedPage.showInNav === false
       ? { showInNav: false }
       : { showInNav: true }),

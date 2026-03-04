@@ -12,6 +12,9 @@
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
   --primary-active: #1e40af;
+  --action: #16a34a;
+  --action-hover: #15803d;
+  --action-active: #166534;
   --focus: #60a5fa;
 
   --success: #16a34a;
@@ -35,6 +38,9 @@
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-primary-active: var(--primary-active);
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-action-active: var(--action-active);
   --color-focus: var(--focus);
   --color-success: var(--success);
   --color-warning: var(--warning);
@@ -58,11 +64,11 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-a {
+a:not([class]) {
   color: var(--primary);
 }
 
-a:hover {
+a:not([class]):hover {
   text-decoration: underline;
 }
 

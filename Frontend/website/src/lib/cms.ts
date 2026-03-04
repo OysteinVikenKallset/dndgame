@@ -8,6 +8,7 @@ export type CmsPublicPage = {
   slug: string;
   locale: string;
   title: string;
+  showTitle?: boolean;
   showInNav?: boolean;
   template?: "page" | "post";
   createdAt?: string;
@@ -44,6 +45,7 @@ type CmsPagesEnvelope = {
       slug: string;
       locale: string;
       title: string;
+      showTitle?: boolean;
       showInNav?: boolean;
       template?: "page" | "post";
       createdAt?: string;
@@ -98,6 +100,7 @@ type ResolveHomepageSlugInput = {
 
 const DEFAULT_CMS_BASE_URL = "http://127.0.0.1:3000";
 const DEFAULT_CMS_ADMIN_URL = "http://127.0.0.1:5173/pages";
+const CMS_ASSET_PROXY_PREFIX = "/api/cms-assets";
 
 function getCmsBaseUrl(): string {
   const configured = process.env["CMS_BASE_URL"]?.trim();
@@ -105,6 +108,21 @@ function getCmsBaseUrl(): string {
     configured && configured.length > 0 ? configured : DEFAULT_CMS_BASE_URL;
 
   return baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+}
+
+export function toCmsAssetUrl(value: string): string {
+  const trimmed = value.trim();
+
+  if (trimmed.length === 0) {
+    return trimmed;
+  }
+
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed;
+  }
+
+  const normalizedPath = trimmed.replace(/^\/+/, "");
+  return `${CMS_ASSET_PROXY_PREFIX}/${normalizedPath}`;
 }
 
 function getRelatedSlugsConfig(): string[] {
@@ -256,6 +274,9 @@ export async function getPublishedPages({
     slug: entry.slug,
     locale: entry.locale,
     title: entry.title,
+    ...(typeof entry.showTitle === "boolean"
+      ? { showTitle: entry.showTitle }
+      : {}),
     ...(typeof entry.showInNav === "boolean"
       ? { showInNav: entry.showInNav }
       : {}),

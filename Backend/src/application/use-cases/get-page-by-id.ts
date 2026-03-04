@@ -26,6 +26,7 @@ export async function getPageById(
   locale: string;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   template?: "page" | "post";
+  showTitle?: boolean;
   showInNav?: boolean;
   version: number;
   updatedAt: string;
@@ -65,6 +66,7 @@ export async function getPageById(
     locale: page.locale,
     status: page.status,
     ...(page.template === "post" ? { template: "post" as const } : {}),
+    ...(page.showTitle === false ? { showTitle: false } : {}),
     ...(page.showInNav === false ? { showInNav: false } : {}),
     version: page.version,
     updatedAt: page.updatedAt,

@@ -170,6 +170,7 @@ export default async function CatchAllPage({
   return (
     <CmsPageView
       title={page.title}
+      showTitle={page.showTitle}
       template={template}
       lead={lead}
       createdAt={createdAt}

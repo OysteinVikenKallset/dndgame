@@ -17,6 +17,7 @@ export type CmsPageRepository = {
     locale: string;
     createdBy: string;
     template?: "page" | "post";
+    showTitle?: boolean;
     showInNav?: boolean;
     contentSchemaVersion: number;
     components?: Array<{
@@ -33,6 +34,7 @@ export type CmsPageRepository = {
       title?: string;
       status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
       template?: "page" | "post";
+      showTitle?: boolean;
       showInNav?: boolean;
       updatedBy: string;
       publishedAt?: string | null;
@@ -55,6 +57,7 @@ export type CmsPublicationRepository = {
       locale: string;
       title: string;
       template?: "page" | "post";
+      showTitle?: boolean;
       showInNav?: boolean;
       createdAt?: string;
       publishedAt: string;
@@ -66,6 +69,7 @@ export type CmsPublicationRepository = {
     locale: string;
     title: string;
     template?: "page" | "post";
+    showTitle?: boolean;
     showInNav?: boolean;
     createdAt?: string;
     publishedAt: string;

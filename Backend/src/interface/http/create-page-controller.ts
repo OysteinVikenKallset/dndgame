@@ -27,6 +27,7 @@ type CreatePageRequest = {
     title: string;
     locale?: string;
     template?: "page" | "post";
+    showTitle?: boolean;
     showInNav?: boolean;
     components?: Array<{
       componentType: string;
@@ -68,6 +69,9 @@ export async function handleCreatePageRequest(
         locale: request.body.locale ?? "en",
         ...(request.body.template !== undefined
           ? { template: request.body.template }
+          : {}),
+        ...(request.body.showTitle !== undefined
+          ? { showTitle: request.body.showTitle }
           : {}),
         ...(request.body.showInNav !== undefined
           ? { showInNav: request.body.showInNav }

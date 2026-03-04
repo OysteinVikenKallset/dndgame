@@ -20,6 +20,7 @@ export async function getPublicPageBySlug(
   slug: string;
   locale: string;
   title: string;
+  showTitle?: boolean;
   template?: "page" | "post";
   createdAt?: string;
   publishedAt: string;
@@ -44,6 +45,7 @@ export async function getPublicPageBySlug(
     slug: snapshot.slug,
     locale: snapshot.locale,
     title: snapshot.title,
+    ...(snapshot.showTitle === false ? { showTitle: false } : {}),
     ...((snapshot.template ?? "page") === "post"
       ? {
           template: "post" as const,

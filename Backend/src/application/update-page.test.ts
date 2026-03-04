@@ -196,6 +196,62 @@ describe("updatePage", () => {
     });
   });
 
+  it("updates showTitle when provided", async () => {
+    const result = await updatePage(
+      {
+        sessionId: "session-user-1",
+        pageId: "page-1",
+        version: 1,
+        showTitle: false,
+      },
+      {
+        ...authDeps(),
+        pageRepository: {
+          findById: async () => ({
+            id: "page-1",
+            slug: "about-us",
+            title: "About",
+            locale: "en",
+            status: "DRAFT",
+            showTitle: true,
+            createdAt: "x",
+            updatedAt: "x",
+            createdBy: "user-1",
+            updatedBy: "user-1",
+            version: 1,
+            contentSchemaVersion: 1,
+          }),
+          findBySlugAndLocale: async () => null,
+          listByOwner: async () => ({ items: [], total: 0 }),
+          create: async () => {
+            throw new Error("not used");
+          },
+          update: async (_pageId, input) => ({
+            id: "page-1",
+            slug: "about-us",
+            title: "About",
+            locale: "en",
+            status: "DRAFT",
+            ...(input.showTitle !== undefined
+              ? { showTitle: input.showTitle }
+              : {}),
+            createdAt: "x",
+            updatedAt: "2026-02-28T10:00:00.000Z",
+            createdBy: "user-1",
+            updatedBy: "user-1",
+            version: 2,
+            contentSchemaVersion: 1,
+          }),
+        },
+      },
+    );
+
+    expect(result).toMatchObject({
+      id: "page-1",
+      version: 2,
+    });
+  });
+
   it("throws unauthorized when session missing", async () => {
     await expect(
       updatePage(

@@ -318,6 +318,64 @@ describe("handleUpdatePageRequest", () => {
     });
   });
 
+  it("returns 400 for non-boolean showTitle", async () => {
+    const response = await handleUpdatePageRequest(
+      {
+        headers: {
+          cookie: "sessionId=session-user-1",
+        },
+        params: {
+          pageId: "page-1",
+        },
+        body: {
+          version: 1,
+          showTitle: "no",
+        },
+      },
+      {
+        sessionService: {
+          createSession: (userId) => `session-${userId}`,
+          getUserId: () => "user-1",
+          invalidateSession: () => {},
+        },
+        userRepository: {
+          findByEmail: async () => null,
+          findById: async () => ({
+            id: "user-1",
+            email: "alice@example.com",
+            passwordHash: "hash",
+          }),
+        },
+        pageRepository: {
+          findById: async () => null,
+          findBySlugAndLocale: async () => null,
+          listByOwner: async () => ({ items: [], total: 0 }),
+          create: async () => {
+            throw new Error("not used");
+          },
+          update: async () => null,
+        },
+      },
+    );
+
+    expect(response).toEqual({
+      status: 400,
+      body: {
+        error: {
+          code: "INVALID_PAGE_INPUT",
+          message: "Fix the highlighted fields",
+          fieldErrors: [
+            {
+              path: "showTitle",
+              code: "INVALID_TYPE",
+              message: "showTitle must be a boolean",
+            },
+          ],
+        },
+      },
+    });
+  });
+
   it("returns component fieldErrors for invalid textImage block", async () => {
     const response = await handleUpdatePageRequest(
       {

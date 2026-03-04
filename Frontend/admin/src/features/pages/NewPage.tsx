@@ -34,6 +34,7 @@ export function NewPage({
     title: "",
     slug: "",
     template: "page",
+    showTitle: true,
     showInNav: true,
     components: [
       {
@@ -63,7 +64,9 @@ export function NewPage({
 
     let changed = false;
 
-    const nextComponents = components.map((component) => {
+    function hydrateComponent(
+      component: PageFormValues["components"][number],
+    ): PageFormValues["components"][number] {
       if (component.componentType === "image") {
         const hasUrl = component.props.url.trim().length > 0;
 
@@ -108,8 +111,20 @@ export function NewPage({
         };
       }
 
+      if (component.componentType === "grid") {
+        return {
+          componentType: "grid",
+          props: {
+            ...component.props,
+            components: component.props.components.map(hydrateComponent),
+          },
+        };
+      }
+
       return component;
-    });
+    }
+
+    const nextComponents = components.map(hydrateComponent);
 
     for (let index = 0; index < components.length; index += 1) {
       if (nextComponents[index] !== components[index]) {
@@ -169,6 +184,7 @@ export function NewPage({
         slug: values.slug,
         locale: "en",
         template: values.template,
+        showTitle: values.showTitle,
         showInNav: values.showInNav,
         components: hydratedComponents,
         bodyRichText: values.bodyRichText,

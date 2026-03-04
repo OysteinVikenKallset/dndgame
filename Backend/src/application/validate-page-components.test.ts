@@ -111,6 +111,102 @@ describe("normalizeAndValidateComponents", () => {
     ]);
   });
 
+  it("accepts valid button and headline blocks", () => {
+    const result = normalizeAndValidateComponents([
+      {
+        componentType: "button",
+        props: {
+          label: "Read more",
+          url: "/about",
+          openInNewTab: true,
+        },
+      },
+      {
+        componentType: "headline",
+        props: {
+          text: "Welcome to our site",
+          level: "h2",
+        },
+      },
+    ]);
+
+    expect(result).toEqual([
+      {
+        componentType: "button",
+        props: {
+          label: "Read more",
+          url: "/about",
+          openInNewTab: true,
+        },
+      },
+      {
+        componentType: "headline",
+        props: {
+          text: "Welcome to our site",
+          level: "h2",
+        },
+      },
+    ]);
+  });
+
+  it("accepts valid grid block with nested components", () => {
+    const result = normalizeAndValidateComponents([
+      {
+        componentType: "grid",
+        props: {
+          width: "50",
+          contentAlign: "center",
+          selfAlign: "right",
+          components: [
+            {
+              componentType: "headline",
+              props: {
+                text: "Inside grid",
+                level: "h3",
+              },
+            },
+            {
+              componentType: "button",
+              props: {
+                label: "Read",
+                url: "/read",
+                openInNewTab: false,
+              },
+            },
+          ],
+        },
+      },
+    ]);
+
+    expect(result).toEqual([
+      {
+        componentType: "grid",
+        props: {
+          width: "50",
+          contentAlign: "center",
+          selfAlign: "right",
+          components: [
+            {
+              componentType: "headline",
+              props: {
+                text: "Inside grid",
+                level: "h3",
+              },
+            },
+            {
+              componentType: "button",
+              props: {
+                label: "Read",
+                url: "/read",
+                openInNewTab: false,
+              },
+            },
+          ],
+        },
+      },
+    ]);
+  });
+
   it("throws when required props are missing", () => {
     expect(() =>
       normalizeAndValidateComponents([
@@ -131,6 +227,44 @@ describe("normalizeAndValidateComponents", () => {
           componentType: "quote",
           props: {
             author: "Unknown",
+          },
+        },
+      ]),
+    ).toThrow(INVALID_PAGE_COMPONENTS_ERROR);
+
+    expect(() =>
+      normalizeAndValidateComponents([
+        {
+          componentType: "button",
+          props: {
+            label: "",
+            url: "",
+          },
+        },
+      ]),
+    ).toThrow(INVALID_PAGE_COMPONENTS_ERROR);
+
+    expect(() =>
+      normalizeAndValidateComponents([
+        {
+          componentType: "headline",
+          props: {
+            text: "Heading",
+            level: "h7",
+          },
+        },
+      ]),
+    ).toThrow(INVALID_PAGE_COMPONENTS_ERROR);
+
+    expect(() =>
+      normalizeAndValidateComponents([
+        {
+          componentType: "grid",
+          props: {
+            width: "40",
+            contentAlign: "left",
+            selfAlign: "center",
+            components: [],
           },
         },
       ]),

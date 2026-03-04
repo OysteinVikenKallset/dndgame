@@ -92,6 +92,7 @@ Fields:
 - `locale` (e.g. `en`, `en-US`, `en-GB`)
 - `status`: `DRAFT | PUBLISHED | ARCHIVED`
 - `template`: `page | post` (default `page`)
+- `showTitle`: `boolean` (default `true`) for om side-tittel (`h1`) skal vises i public website-template
 - `showInNav`: `boolean` (default `true`) for public header/footer visibility
 - `createdAt`, `updatedAt`, `publishedAt?`
 - `createdBy`, `updatedBy`
@@ -114,7 +115,7 @@ Blocks-first policy (current direction):
 - Public frontend rendrer komponenter fra JSON med en registrert block-renderer per `componentType`.
 - `bodyRichText` beholdes kun som legacy-fallback for eldre innhold.
 
-MVP block allowlist (v0.3)
+MVP block allowlist (v0.4)
 
 - `richText`
   - `props`: `{ "html": string }`
@@ -124,12 +125,33 @@ MVP block allowlist (v0.3)
   - `props`: `{ "title?": string, "text": string, "mediaId": string, "alt": string, "layout": "imageLeft" | "imageRight" }`
 - `quote`
   - `props`: `{ "quote": string, "author?": string }`
+- `button`
+  - `props`: `{ "label": string, "url": string, "openInNewTab": boolean }`
+- `headline`
+  - `props`: `{ "text": string, "level": "h1" | "h2" | "h3" | "h4" | "h5" | "h6" }`
+- `grid`
+  - `props`: `{ "width": "100" | "50" | "33" | "25", "contentAlign": "left" | "center" | "right", "selfAlign": "left" | "center" | "right", "components": ComponentInstance[] }`
+  - `components[]` i `grid` kan inneholde eksisterende blokktyper, men nested `grid` er ikke støttet i MVP.
 
 MUST-regler for blocks:
 
 - `componentType` utenfor allowlist avvises med `400 VALIDATION_ERROR`.
 - Block `props` valideres server-side med stabil `fieldErrors`-shape.
 - Render-order skal følge rekkefølgen i `components[]` deterministisk.
+
+Presentasjonsnotat (ikke API-kontrakt):
+
+- Public website rendrer nå blocks uten tvungne card/border-wrappere rundt hver blokk.
+- Knappepresentasjon i website bruker grønn action-token-palett for `button`-blokken og øvrige primærknapper.
+- Admin editor støtter nå drag-and-drop for rekkefølge og flytting av blokker inn i/ut av `grid`.
+- Admin editor støtter nå også duplisering av blocks (inkludert child blocks i `grid`) via egen ikonhandling per block.
+- Admin editor bruker nå eksplisitt drag-handle per block for å unngå utilsiktet drag ved tekstseleksjon.
+- Admin editor-layout er oppdatert til tre soner (`Component overview` venstre, `Content` midt, `Page settings` høyre), der `Page settings` er collapsible accordion.
+- `showInNav` redigeres ikke i page editor (styres i `Menu`), mens `showTitle` redigeres i `Page settings`.
+- `Component overview` i admin er nå både klikkbar (scroll/fokus til valgt block) og støtteflate for drag-and-drop rekkefølgejustering.
+- Drag i `Component overview` skjer nå direkte fra komponentnavn (uten eget drag-ikon), og aktivt valgt item markeres visuelt.
+- `Content`-kolonnen bruker nå drag-only drop-indikatorer (horisontal linje) i stedet for permanente synlige drop-bokser, inkludert fungerende drop-target for tomme grids.
+- Admin edit-flow bruker nå én synlig primærhandling for publisering (`Save & publish` / `Save & republish`) som lagrer og publiserer i ett klikk.
 
 Content delivery rules:
 
@@ -221,6 +243,9 @@ Media policy (MVP):
 - Public URL skal returneres som del av media-metadata.
 - Storage-abstraksjon MAY innføres senere for S3-kompatibel backend.
 - Admin-klient skal ved lagring av `image`/`textImage` hydrere manglende `props.url` fra media-bibliotek (`mediaId -> url`) før request sendes.
+- Admin edit-klient SHOULD beholde kjente blokktyper (`richText`/`image`/`textImage`/`quote`) ved innlasting selv om enkelte props mangler, ved å normalisere til trygge defaults og la bruker rette feltene før lagring.
+- Backend upload/static path MUST være robust mot oppstart fra både repo-root og `Backend/`-katalog, slik at `/uploads/*` peker til samme fysiske mappe i begge tilfeller.
+- Public website MAY proxy relative asset-paths via eget same-origin endpoint (f.eks. `/api/cms-assets/*`) som videresender til CMS-backend, slik at browser ikke må nå backend-port direkte.
 
 `PATCH /api/settings` body (MVP):
 
@@ -252,6 +277,7 @@ MVP authz-presisering for page mutasjoner:
 
 - `GET /api/content/pages?locale=en&limit=20` returns latest published pages (summary list)
 - `GET /api/content/pages/:slug?locale=en` returns published page JSON
+- Public DTO MAY return `showTitle: false` når sidetittel skal skjules; fravær betyr `true`.
 - `GET /api/content/settings?locale=en` returns public CMS settings for nettsted (f.eks. `homepageSlug` + `menu` for header/footer)
 - `GET /api/content/pages/:id/preview` requires authenticated CMS user
 
@@ -509,7 +535,7 @@ Endpoint test minimum:
 
 ### 13.8 Blocks & media baseline
 
-- [x] Implement server-side allowlist validation for `components[]` (`richText`, `image`, `textImage`, `quote`).
+- [x] Implement server-side allowlist validation for `components[]` (`richText`, `image`, `textImage`, `quote`, `button`, `headline`, `grid`).
 - [x] Ensure `PATCH/POST /api/pages` supports persisted blocks as first-class content model.
 - [x] Implement media endpoints (`POST/GET /api/media`) with local disk storage for MVP.
 - [x] Return stable media metadata DTO (`id`, `url`, `filename`, `mimeType`, `sizeBytes`, `createdAt`).

@@ -9,8 +9,9 @@ import {
   createApiErrorResponse,
   createApiSuccessResponse,
 } from "./api-response";
+import { resolveUploadsDirectory } from "../../infrastructure/filesystem/resolve-uploads-directory";
 
-const UPLOAD_DIRECTORY = resolve(process.cwd(), "Backend/data/uploads");
+const UPLOAD_DIRECTORY = resolveUploadsDirectory();
 
 const ALLOWED_MIME_TYPES = new Set([
   "image/jpeg",

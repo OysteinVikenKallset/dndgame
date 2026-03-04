@@ -1,6 +1,5 @@
 import {
   type Dispatch,
-  type FormEvent,
   type ReactElement,
   type SetStateAction,
   useEffect,
@@ -49,6 +48,7 @@ export function EditPage({
     title: "",
     slug: "",
     template: "page",
+    showTitle: true,
     showInNav: true,
     components: [],
     bodyRichText: "",
@@ -79,7 +79,9 @@ export function EditPage({
 
     let changed = false;
 
-    const nextComponents = components.map((component) => {
+    function hydrateComponent(
+      component: PageFormValues["components"][number],
+    ): PageFormValues["components"][number] {
       if (component.componentType === "image") {
         const hasUrl = component.props.url.trim().length > 0;
 
@@ -124,8 +126,20 @@ export function EditPage({
         };
       }
 
+      if (component.componentType === "grid") {
+        return {
+          componentType: "grid",
+          props: {
+            ...component.props,
+            components: component.props.components.map(hydrateComponent),
+          },
+        };
+      }
+
       return component;
-    });
+    }
+
+    const nextComponents = components.map(hydrateComponent);
 
     for (let index = 0; index < components.length; index += 1) {
       if (nextComponents[index] !== components[index]) {
@@ -144,83 +158,151 @@ export function EditPage({
       return [];
     }
 
+    function normalizeComponent(
+      component: NonNullable<PageDetailsDto["components"]>[number],
+      allowGrid: boolean,
+    ): PageComponent | null {
+      if (component.componentType === "richText") {
+        const html = component.props["html"];
+
+        return {
+          componentType: "richText" as const,
+          props: { html: typeof html === "string" ? html : "" },
+        };
+      }
+
+      if (component.componentType === "image") {
+        const mediaId = component.props["mediaId"];
+        const url = component.props["url"];
+        const alt = component.props["alt"];
+        const caption = component.props["caption"];
+
+        return {
+          componentType: "image" as const,
+          props: {
+            mediaId: typeof mediaId === "string" ? mediaId : "",
+            url: typeof url === "string" ? url : "",
+            alt: typeof alt === "string" ? alt : "",
+            ...(typeof caption === "string" ? { caption } : {}),
+          },
+        };
+      }
+
+      if (component.componentType === "textImage") {
+        const title = component.props["title"];
+        const text = component.props["text"];
+        const mediaId = component.props["mediaId"];
+        const url = component.props["url"];
+        const alt = component.props["alt"];
+        const layout = component.props["layout"];
+
+        return {
+          componentType: "textImage" as const,
+          props: {
+            ...(typeof title === "string" ? { title } : {}),
+            text: typeof text === "string" ? text : "",
+            mediaId: typeof mediaId === "string" ? mediaId : "",
+            url: typeof url === "string" ? url : "",
+            alt: typeof alt === "string" ? alt : "",
+            layout: layout === "imageRight" ? "imageRight" : "imageLeft",
+          },
+        };
+      }
+
+      if (component.componentType === "quote") {
+        const quote = component.props["quote"];
+        const author = component.props["author"];
+
+        return {
+          componentType: "quote" as const,
+          props: {
+            quote: typeof quote === "string" ? quote : "",
+            ...(typeof author === "string" ? { author } : {}),
+          },
+        };
+      }
+
+      if (component.componentType === "button") {
+        const label = component.props["label"];
+        const url = component.props["url"];
+        const openInNewTab = component.props["openInNewTab"];
+
+        return {
+          componentType: "button" as const,
+          props: {
+            label: typeof label === "string" ? label : "",
+            url: typeof url === "string" ? url : "",
+            openInNewTab:
+              typeof openInNewTab === "boolean" ? openInNewTab : false,
+          },
+        };
+      }
+
+      if (component.componentType === "headline") {
+        const text = component.props["text"];
+        const level = component.props["level"];
+
+        return {
+          componentType: "headline" as const,
+          props: {
+            text: typeof text === "string" ? text : "",
+            level:
+              level === "h1" ||
+              level === "h2" ||
+              level === "h3" ||
+              level === "h4" ||
+              level === "h5" ||
+              level === "h6"
+                ? level
+                : "h2",
+          },
+        };
+      }
+
+      if (component.componentType === "grid" && allowGrid) {
+        const width = component.props["width"];
+        const contentAlign = component.props["contentAlign"];
+        const selfAlign = component.props["selfAlign"];
+        const nested = component.props["components"];
+
+        const normalizedNested = Array.isArray(nested)
+          ? nested
+              .map((entry) => normalizeComponent(entry, false))
+              .filter((entry): entry is PageComponent => entry !== null)
+          : [];
+
+        return {
+          componentType: "grid" as const,
+          props: {
+            width:
+              width === "100" ||
+              width === "50" ||
+              width === "33" ||
+              width === "25"
+                ? width
+                : "100",
+            contentAlign:
+              contentAlign === "left" ||
+              contentAlign === "center" ||
+              contentAlign === "right"
+                ? contentAlign
+                : "left",
+            selfAlign:
+              selfAlign === "left" ||
+              selfAlign === "center" ||
+              selfAlign === "right"
+                ? selfAlign
+                : "left",
+            components: normalizedNested,
+          },
+        };
+      }
+
+      return null;
+    }
+
     return components
-      .map((component) => {
-        if (component.componentType === "richText") {
-          const html = component.props["html"];
-
-          if (typeof html === "string") {
-            return {
-              componentType: "richText" as const,
-              props: { html },
-            };
-          }
-        }
-
-        if (component.componentType === "image") {
-          const mediaId = component.props["mediaId"];
-          const url = component.props["url"];
-          const alt = component.props["alt"];
-          const caption = component.props["caption"];
-
-          if (typeof mediaId === "string" && typeof alt === "string") {
-            return {
-              componentType: "image" as const,
-              props: {
-                mediaId,
-                url: typeof url === "string" ? url : "",
-                alt,
-                ...(typeof caption === "string" ? { caption } : {}),
-              },
-            };
-          }
-        }
-
-        if (component.componentType === "textImage") {
-          const title = component.props["title"];
-          const text = component.props["text"];
-          const mediaId = component.props["mediaId"];
-          const url = component.props["url"];
-          const alt = component.props["alt"];
-          const layout = component.props["layout"];
-
-          if (
-            typeof text === "string" &&
-            typeof mediaId === "string" &&
-            typeof alt === "string" &&
-            (layout === "imageLeft" || layout === "imageRight")
-          ) {
-            return {
-              componentType: "textImage" as const,
-              props: {
-                ...(typeof title === "string" ? { title } : {}),
-                text,
-                mediaId,
-                url: typeof url === "string" ? url : "",
-                alt,
-                layout,
-              },
-            };
-          }
-        }
-
-        if (component.componentType === "quote") {
-          const quote = component.props["quote"];
-          const author = component.props["author"];
-
-          if (typeof quote === "string") {
-            return {
-              componentType: "quote" as const,
-              props: {
-                quote,
-                ...(typeof author === "string" ? { author } : {}),
-              },
-            };
-          }
-        }
-
-        return null;
-      })
+      .map((component) => normalizeComponent(component, true))
       .filter((entry): entry is PageComponent => entry !== null);
   }
 
@@ -230,6 +312,7 @@ export function EditPage({
         title: page?.title ?? "",
         slug: page?.slug ?? "",
         template: page?.template ?? "page",
+        showTitle: page?.showTitle ?? true,
         showInNav: page?.showInNav ?? true,
         components: page?.components ?? [],
         bodyRichText: page?.bodyRichText ?? "",
@@ -280,6 +363,7 @@ export function EditPage({
       title: result.data.title,
       slug: result.data.slug,
       template: result.data.template === "post" ? "post" : "page",
+      showTitle: result.data.showTitle ?? true,
       showInNav: result.data.showInNav ?? true,
       components: normalizeComponents(result.data.components),
       bodyRichText: result.data.bodyRichText ?? "",
@@ -291,10 +375,11 @@ export function EditPage({
     void loadPage();
   }, [id]);
 
-  async function save(event: FormEvent<HTMLFormElement>): Promise<void> {
-    event.preventDefault();
+  async function saveDraft(options?: {
+    silentSuccessToast?: boolean;
+  }): Promise<boolean> {
     if (!page || !id) {
-      return;
+      return false;
     }
 
     const nextErrors = validatePageInput(values);
@@ -302,12 +387,12 @@ export function EditPage({
 
     if (Object.keys(nextErrors).length > 0) {
       setToastError(setToast, "Fix validation errors.");
-      return;
+      return false;
     }
 
     if (csrfBlocked) {
       setToastError(setToast, "CSRF token missing; backend misconfigured");
-      return;
+      return false;
     }
 
     setSubmitState("submitting");
@@ -327,6 +412,7 @@ export function EditPage({
         title: values.title,
         slug: values.slug,
         template: values.template === "post" ? "post" : "page",
+        showTitle: values.showTitle,
         showInNav: values.showInNav,
         components: hydratedComponents,
         bodyRichText: values.bodyRichText,
@@ -338,37 +424,37 @@ export function EditPage({
       setSubmitState("error");
       if (result.error.status === 401) {
         onUnauthorized();
-        return;
+        return false;
       }
 
       setErrors(extractFieldErrors(result.error));
       setToastError(setToast, mapErrorToMessage(result.error));
-      return;
+      return false;
     }
 
     setSubmitState("success");
-    setToast({ type: "success", message: "Saved" });
+    if (!options?.silentSuccessToast) {
+      setToast({ type: "success", message: "Saved" });
+    }
     await loadPage();
     setTimeout(() => setSubmitState("idle"), 600);
+    return true;
   }
 
-  async function publish(): Promise<void> {
-    if (!page || !id || page.status !== "DRAFT") {
-      return;
-    }
-
-    const validationErrors = validatePageInput(values);
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    if (csrfBlocked) {
-      setToastError(setToast, "CSRF token missing; backend misconfigured");
+  async function saveAndPublish(): Promise<void> {
+    if (!page || !id || page.status === "ARCHIVED") {
       return;
     }
 
     setPublishState("submitting");
+
+    const saved = await saveDraft({ silentSuccessToast: true });
+
+    if (!saved) {
+      setPublishState("error");
+      return;
+    }
+
     const result = await api.publishPage(id, csrfToken);
 
     if (!result.ok) {
@@ -383,7 +469,10 @@ export function EditPage({
     }
 
     setPublishState("success");
-    setToast({ type: "success", message: "Published" });
+    setToast({
+      type: "success",
+      message: page.status === "PUBLISHED" ? "Republished" : "Published",
+    });
     await loadPage();
     setTimeout(() => setPublishState("idle"), 600);
   }
@@ -494,7 +583,7 @@ export function EditPage({
   const publishDisabled =
     !page ||
     disableAll ||
-    page.status !== "DRAFT" ||
+    page.status === "ARCHIVED" ||
     Object.keys(validatePageInput(values)).length > 0;
   const unpublishDisabled = !page || disableAll || page.status !== "PUBLISHED";
 
@@ -510,59 +599,55 @@ export function EditPage({
       />
 
       <Card className="editor-layout">
-        <div className="editor-shell">
-          <form id="edit-page-form" className="ui-stack" onSubmit={save}>
-            <PageEditorFields
-              values={values}
-              setValues={setValues}
-              errors={errors}
-              disabled={disableAll}
-              status={page?.status}
-              version={page?.version}
-              csrfBlocked={csrfBlocked}
-              csrfToken={csrfToken}
-            />
-
-            <div className="editor-form-actions">
-              <Button
-                type="submit"
-                variant="primary"
-                loading={submitState === "submitting"}
-                disabled={disableAll}
-              >
-                {submitState === "submitting" ? "Saving..." : "Save"}
-              </Button>
-            </div>
-          </form>
-
-          <aside className="editor-sidebar" aria-label="Page actions">
-            <Button
-              variant="secondary"
-              onClick={() => void publish()}
-              loading={publishState === "submitting"}
-              disabled={publishDisabled}
-            >
-              {publishState === "submitting" ? "Publishing..." : "Publish"}
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => void unpublish()}
-              loading={unpublishState === "submitting"}
-              disabled={unpublishDisabled}
-            >
-              {unpublishState === "submitting"
-                ? "Unpublishing..."
-                : "Unpublish"}
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => setArchiveModalOpen(true)}
-              disabled={disableAll}
-            >
-              Archive
-            </Button>
-          </aside>
-        </div>
+        <form
+          id="edit-page-form"
+          className="ui-stack"
+          onSubmit={(event) => event.preventDefault()}
+        >
+          <PageEditorFields
+            values={values}
+            setValues={setValues}
+            errors={errors}
+            disabled={disableAll}
+            status={page?.status}
+            version={page?.version}
+            csrfBlocked={csrfBlocked}
+            csrfToken={csrfToken}
+            sideActions={
+              <>
+                <Button
+                  variant="primary"
+                  onClick={() => void saveAndPublish()}
+                  loading={publishState === "submitting"}
+                  disabled={publishDisabled}
+                >
+                  {publishState === "submitting"
+                    ? "Publishing..."
+                    : page?.status === "PUBLISHED"
+                      ? "Save & republish"
+                      : "Save & publish"}
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => void unpublish()}
+                  loading={unpublishState === "submitting"}
+                  disabled={unpublishDisabled}
+                >
+                  {unpublishState === "submitting"
+                    ? "Unpublishing..."
+                    : "Unpublish"}
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => setArchiveModalOpen(true)}
+                  disabled={disableAll}
+                >
+                  Archive
+                </Button>
+              </>
+            }
+          />
+        </form>
 
         <div
           className="page-header__actions"

@@ -76,7 +76,32 @@ Dette dokumentet er en kort, levende status for AI-agenter.
 - Første blocks-implementasjon er levert end-to-end: server-side allowlist-validering for page components, nye media-endepunkter (`POST/GET /api/media`) med lokal fil-lagring + metadata-tabell, admin blocks-editor med enkel reorder (`Up`/`Down`) og media-opplasting/valg, samt website-rendering for `richText`/`image`/`textImage`/`quote`
 - Valideringsfeil for page-input er forbedret med konkrete `fieldErrors` for blokk-props (f.eks. manglende `alt` i `textImage`), og admin mapper nå komponent-paths til tydeligere UI-feil i stedet for kun generisk "Invalid page input"
 - Admin create/edit hydrerer nå manglende media-URL fra media-biblioteket før lagring av `image`/`textImage`, og edit-normalisering bevarer disse blokkene selv om innlastet data mangler `url`; dette adresserer tilfeller der ikke-`richText` blokker ellers ikke ble lagret/oppdatert stabilt
+- Admin edit-normalisering for blocks er nå gjort tolerant for delvis manglende props (trygge defaults per kjent blokk), slik at eksisterende `richText`/`image`/`textImage`/`quote` ikke filtreres bort i editor etter lagring
 - `cms-flow.integration.test.ts` er gjort deterministisk for settings ved å sende eksplisitte menyfelter i `PATCH /api/settings`, slik at testen ikke feiler på tidligere persistente DB-innstillinger
+- Backend media-lagring og statisk `/uploads`-eksponering bruker nå en delt, cwd-uavhengig path-resolver, slik at bilder virker selv om backend startes fra enten repo-root eller `Backend/`
+- Website genererer nå relative media-URL-er via same-origin proxy (`/api/cms-assets/...`) i stedet for direkte backend-origin, slik at bilder vises også når browser ikke har direkte nettverkstilgang til port 3000
+- CMS blocks er utvidet med `button` (label/url/openInNewTab) og `headline` (text/level h1-h6) med backend-validering, admin-editorstøtte og website-rendering
+- Website CMS-rendering er visuelt forenklet: tvungne card/border-wrappere rundt hver blokk er fjernet, og primære knapper (inkl. `button`-blokk) bruker ny grønn action-token-palett
+- CMS har nå `grid`-komponent end-to-end: backend-validering, admin-editor og website-rendering med breddevalg (`100/50/33/25`), innholdsjustering (`left/center/right`), containerplassering (`left/center/right`) og nested child components (uten nested grid i MVP)
+- Page-editoren støtter nå native drag-and-drop for komponentrekkefølge og flytting av komponenter inn i/ut av `grid`, med `Up`/`Down` beholdt som fallback
+- Page-editoren støtter nå duplisering av komponenter via liten ikonknapp per kort (også for `grid`-children), der kopi legges rett etter originalen
+- Edit-view er justert slik at actions-kolonnen (`Publish`/`Unpublish`/`Archive`) er knyttet til `Page details`, mens `Content` rendres i full bredde under
+- Drag-and-drop er forbedret med eksplisitt drag-handle per komponent (unngår utilsiktet drag ved tekstmarkering), og flytting mellom ulike grids er verifisert
+- Page editor/create er omstrukturert til tre paneler (`Page settings` venstre, `Content` midt, `Component overview` høyre), og `showInNav` er fjernet fra side-skjemaet for å unngå duplisert styring mot menu-flaten
+- Editorlayouten er justert videre: `Component overview` ligger nå i venstre panel, `Page settings` i høyre panel som collapsible accordion, og hovedinnhold i midtkolonnen
+- Admin `app-shell` er utvidet til `max-width: 1600px` for bedre arbeidsflate i editoren
+- `Component overview` er nå interaktiv: klikk på item scroll/fokuserer tilsvarende block i content-kolonnen
+- `Component overview` støtter nå også drag-and-drop for rekkefølgejustering av både root blocks og child blocks i `grid`
+- I `Component overview` skjer drag nå direkte fra komponentnavnet (uten drag-ikon), og sist valgte element markeres aktivt for bedre orientering
+- `Content`-kolonnen bruker nå drag-only drop-indikatorer (horisontal linje) i stedet for permanente synlige drop-bokser, med tydelig plassering kun mens drag-and-drop pågår
+- Tomme grids støtter nå robust drop fra både content-flaten og `Component overview`, slik at komponenter kan dras inn som første child uten workarounds
+- Edit-flow har nå én synlig primærknapp (`Save & publish` / `Save & republish`) som både lagrer og publiserer i ett klikk; separat save-knapp i edit-view er fjernet
+- Primæraction er flyttet over `Page settings` og er synlig også når settings-accordion er lukket
+- Komponentkort i content er strammet inn med mindre vertikal padding, og `grid`-kort har egen container-bakgrunn for tydeligere struktur
+- Website-renderer har nå økt vertikal rytme mellom CMS-komponenter (`space-y-8` i `CmsComponentRenderer`) for tydeligere separasjon mellom innholdsblokker
+- Pages har nå `showTitle` end-to-end (admin checkbox i `Page settings` + persisted i backend/snapshot + website skjuler/viser H1 basert på feltet), og edit-actionene (`Save & republish`/`Unpublish`/`Archive`) ligger over `Page settings`-accordion
+- `showTitle`-checkbox i `Page settings` er flyttet opp under `Title` for bedre synlighet i editoren
+- `showTitle`-feltet i `Page settings` har nå eksplisitt feltlabel (`Page title`) i tillegg til checkbox-tekst for å unngå at raden oppleves som skjult
 
 ## Siste beslutninger
 

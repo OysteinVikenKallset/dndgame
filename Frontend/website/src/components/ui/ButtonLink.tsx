@@ -12,8 +12,7 @@ const variantClasses: Record<
   NonNullable<ButtonLinkProps["variant"]>,
   string
 > = {
-  primary:
-    "bg-primary text-white hover:bg-primary-hover active:bg-primary-active",
+  primary: "bg-action text-white hover:bg-action-hover active:bg-action-active",
   secondary: "bg-surface-2 text-text border border-border hover:bg-surface",
   ghost: "bg-transparent text-text hover:bg-surface-2",
 };
